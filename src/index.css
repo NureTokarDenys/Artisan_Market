@@ -15,3 +15,8 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+main {
+    height: 80vh;
+    width: 100%;
+}
