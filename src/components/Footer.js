@@ -2,7 +2,7 @@ import "./Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="Footer">Footer</footer>
+    <footer className="Footer">{new Date().getFullYear()} Artisan Market ©</footer>
   )
 }
 
