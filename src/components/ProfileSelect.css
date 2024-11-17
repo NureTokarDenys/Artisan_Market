@@ -1,0 +1,16 @@
+.selectContainer {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    margin: 5px;
+}
+
+.selectContainer label {
+    font-size: medium;
+}
+
+.selectContainer select {
+    border-radius: 5px;
+    background-color: #edf2f6;
+    width: 100%;
+}

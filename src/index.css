@@ -17,6 +17,6 @@ body {
 }
 
 main {
-    height: 80vh;
+    min-height: 80vh;
     width: 100%;
 }
