@@ -17,6 +17,7 @@ body {
 }
 
 main {
-    min-height: 80vh;
+    height: 80vh;
+    overflow-y: auto;
     width: 100%;
 }
