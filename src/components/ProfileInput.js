@@ -1,11 +1,26 @@
+import ProfileErrorMessage from './ProfileErrorMessage';
 import './ProfileInput.css';
 
-const ProfileInput = ({ title = "", placeholder = title !== "" ? "Enter your " + title.toString().toLowerCase() : "" }) => {
+
+const ProfileInput = ({ title = "", placeholder = title !== "" ? "Enter your " + title.toString().toLowerCase() : "", inputState, inputSetState, errorState, setErrorState, validate }) => {
+  const handleSetState = (e) => {
+    let val = e.target.value;
+    inputSetState(val);
+
+    let invalid = validate(val);
+    if(invalid){
+      setErrorState(invalid);
+    }else {
+      setErrorState("");
+    }
+  }
+
   return (
     <div className='inputContainer'> 
-          <label className='inputLabel' htmlFor={title}>{title}</label>
-          <input className='input' id={title} type='text' placeholder={placeholder}></input>
-        </div>
+      <label className='inputLabel' htmlFor={title}>{title}</label>
+      <input className='input' style={{ border: `2px solid ${errorState ? "red" : "black"}` }} id={title} type='text' placeholder={placeholder} value={inputState} onChange={handleSetState} ></input>
+      <ProfileErrorMessage ErrorMessage={errorState ? errorState : ""}/>
+    </div>
   )
 }
 

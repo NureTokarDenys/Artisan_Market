@@ -1,9 +1,9 @@
-import { CgSearch } from "react-icons/cg";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import './SearchBar.css';
 
 const SearchBar = () => {
   return (
-    <CgSearch /> 
+    <FaMagnifyingGlass /> 
   )
 }
 

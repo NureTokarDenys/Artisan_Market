@@ -10,9 +10,9 @@
 }
 
 .input {
-    background-color: #edf2f6;
+    background-color: #cadff1;
     border-radius: 5px;
     padding: 3px;
-    border: 1px solid black;
     width: 90%;
+    outline: none;
 }

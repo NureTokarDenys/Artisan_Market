@@ -4,7 +4,7 @@
   "homepage": "https://NureTokarDenys.github.io/",
   "private": true,
   "dependencies": {
-    "css.gg": "^2.1.4",
+    "fa6": "^2.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
@@ -28,7 +28,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-
   },
   "devDependencies": {
     "gh-pages": "^6.2.0"

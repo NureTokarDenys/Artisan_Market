@@ -1,0 +1,12 @@
+.errorMessage {
+    content: "Hello";
+    color: red;
+    width: fit-content;
+    height: 20px;
+    font-size: 15px;
+    padding: 1px 10px 1px 10px;
+    margin: 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+    text-align: center;
+}

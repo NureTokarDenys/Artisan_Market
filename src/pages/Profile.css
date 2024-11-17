@@ -1,5 +1,13 @@
+.main {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;  
+}
+
 .profile {
-    height: 80vh;
+    min-height: 80vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -9,11 +17,12 @@
 
 .title, .avatar_bio,  .additionalInfo, .paymentInfo, .actions {
     margin: 1vh 2vw 2vh 1vw;
-    width: 90%;
+    width: 90vw;
     border-bottom: 1px solid #4e4e4e;
 }
 
 .title {
+    margin-bottom: 0;
     height: 6vh;
     font-size: large;
     display: flex;
@@ -26,12 +35,12 @@
     height: 33vh;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
 
 .avatarContainer {
-    width: 30%;
+    width: 15vw;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -48,14 +57,16 @@
 .avatar {
     border: 1px dashed black;
     border-radius: 25px;
-    width: 75%;
-    height: 75%;
+    height: 85%;
     display: grid;
     place-content: center;
+    text-align: center;
+    margin: 10px;
+    aspect-ratio: 1 / 1;
 }
 
 .bioContainer {
-    width: 70%;
+    width: 75vw;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -71,7 +82,7 @@
 }
 
 .bio, .avatar {
-    background-color: #edf2f6;
+    background-color: #cadff1;
 }
 
 .additionalInfo {
@@ -83,7 +94,8 @@
 .currency_languageContainer {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: flex-start;
+    justify-content: flex-start;
     width: 45%;
     margin: 0 10px 10px 0;
 }
@@ -107,6 +119,8 @@
 }
 
 .actions {
+    margin-top: 0;
+    margin-bottom: 10px;
     width: 25%;
     display: flex;
     flex-direction: row;
