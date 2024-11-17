@@ -1,0 +1,93 @@
+.profile {
+    min-height: 80vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.title, .avatar_bio,  .additionalInfo, .paymentInfo{
+    margin: 1vh 2vw 2vh 1vw;
+    width: 90%;
+    border-bottom: 1px solid #4e4e4e;
+}
+
+.title {
+    height: 6vh;
+    font-size: large;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #52765a;
+}
+
+.avatar_bio {
+    height: 33vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.avatarContainer {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 0 10px 5px 0;
+}
+
+.avatarText, .bioText {
+    font-size: medium;
+    margin: 5px;
+}
+
+.avatar {
+    border: 1px dashed black;
+    border-radius: 25px;
+    width: 75%;
+    height: 75%;
+    display: grid;
+    place-content: center;
+}
+
+.bioContainer {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.bio {
+    height: 75%;
+    width: 100%;
+    resize: none;
+    border-radius: 5px;
+}
+
+.bio, .avatar {
+    background-color: #edf2f6;
+}
+
+.additionalInfo {
+    display: flex; 
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.currency_languageContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 45%;
+    margin: 0 10px 10px 0;
+}
+
+.paymentInfo {
+    display: flex;
+}

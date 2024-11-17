@@ -9,14 +9,14 @@ const Header = () => {
     <header className="Header">
         <p className="textLogo">Artisan Market ©</p>
         <ul className='linkList'>
-            <li> <Link to="/"> Shop </Link> </li>
+            <li> <Link to="/products"> Shop </Link> </li>
             <li> <Link to="/about"> About Us </Link> </li>
             <li> <Link to="/contact"> Contact </Link> </li>
         </ul>
         <div className="search_profile">
-            <Link to="/"> <SearchBar /> </Link> {/* TODO */}
+            <Link to="/"> <SearchBar /> </Link> {/* TODO next sprints*/}
             <Link to="/profile"> <CgProfile /> </Link>
-            <Link to="/cart"> <CgShoppingCart /> </Link>
+            <Link to="/cart"> <CgShoppingCart /> </Link>  {/* TODO next sprints*/}
         </div>
     </header>
   )
