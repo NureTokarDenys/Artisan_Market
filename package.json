@@ -1,25 +1,4 @@
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "name": "be",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon ./src/index.js",
-    "start": "node ./src/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "express": "^4.21.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.7"
-=======
-=======
->>>>>>> 045c9402551c54f9184ba69f7287487512087f7f
   "name": "artisan-market",
   "version": "0.1.0",
   "homepage": "https://NureTokarDenys.github.io/",
@@ -49,18 +28,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d49897f (fe init)
-=======
+
   },
   "devDependencies": {
     "gh-pages": "^6.2.0"
->>>>>>> 1efff7e (starting structure)
-=======
-  },
-  "devDependencies": {
-    "gh-pages": "^6.2.0"
->>>>>>> 045c9402551c54f9184ba69f7287487512087f7f
   }
 }
