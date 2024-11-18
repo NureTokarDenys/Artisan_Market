@@ -12,10 +12,20 @@ import './App.css';
 import { useState } from 'react';
 
 function App() {
-  const languageDir = [{name: "en"}, {name: "ua"}]; //temp
-  const currencyDir = [{name: "Dollar", symbol: "$", multiply: 1}, {name: "Euro", symbol: "€", multiply: 1.1},{name: "Hryvnia", symbol: "₴", multiply: "40"}]; //temp
+  // Temp users
+  const [products, setProducts] = useState([{
+    name: "Ceramic bowl",
+    price: 74.99,
+    description: "This handcrafted ceramic bowl set is a perfect addition to your home. Each bowl is carefully crafted from natural clay and kilrr fired at high temperatures. giving it both durability and a unique appearance. Ideal for serving food. adding a decorative touch, or gifting to someone who appreciates original, handmade items,",
+    quantity: 4,
+    images: ["img1.png"]
+  }]);
 
-  // Profile states
+  // Temp
+  const languageDir = [{name: "en"}, {name: "ua"}];
+  const currencyDir = [{name: "Dollar", symbol: "$", multiply: 1}, {name: "Euro", symbol: "€", multiply: 1.1},{name: "Hryvnia", symbol: "₴", multiply: "40"}];
+
+  // Profile States
   const [bio, setBio] = useState("");
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
@@ -26,6 +36,9 @@ function App() {
   const [cardDate, setCardDate] = useState("");
   const [cardCVV, setCardCVV] = useState("");
   const [cardName, setCardName] = useState("");
+
+  // Profile Image
+  const [profileImage, setProfileImage] = useState(null);
 
   return (
     <div className="App">
@@ -48,6 +61,7 @@ function App() {
                                               cardDate={cardDate} setCardDate={setCardDate}
                                               cardCVV={cardCVV} setCardCVV={setCardCVV}
                                               cardName={cardName} setCardName={setCardName}
+                                              profileImage={profileImage} setProfileImage={setProfileImage}
                                             />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="*" element={<NotFound />} />

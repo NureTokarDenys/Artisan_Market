@@ -32,56 +32,68 @@
 }
 
 .avatar_bio {
-    height: 33vh;
+    height: 230px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
+    gap: 10px; 
 }
 
 .avatarContainer {
-    width: 15vw;
-    height: 100%;
+    width: 250px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: flex-start;
-    margin: 0 10px 5px 0;
 }
 
-.avatarText, .bioText {
-    font-size: medium;
-    margin: 5px;
+.avatarText {
+    margin-bottom: 10px; 
 }
 
-.avatar {
+.edit-icon {
+    margin: 0 0 0 8px;
+    cursor: pointer;
+}
+
+.avatar, .profileImage {
     border: 1px dashed black;
     border-radius: 25px;
-    height: 85%;
     display: grid;
     place-content: center;
     text-align: center;
-    margin: 10px;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1 / 1; 
+    width: 100%; 
+    max-width: 180px; 
+    background-color: #cadff1;
+}
+
+.avatar {
+    cursor: pointer;
+}
+
+
+.profileImage {
+    object-fit: cover;
 }
 
 .bioContainer {
-    width: 75vw;
+    flex-grow: 1;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: flex-start;
 }
 
-.bio {
-    height: 75%;
-    width: 100%;
-    resize: none;
-    border-radius: 5px;
+.bioText {
+    margin-bottom: 10px; 
 }
 
-.bio, .avatar {
+.bio {
+    height: 180px;
+    width: 100%; 
+    resize: none;
+    border-radius: 5px;
     background-color: #cadff1;
 }
 

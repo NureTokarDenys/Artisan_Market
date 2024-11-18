@@ -3,9 +3,11 @@ import ProfileSelect from '../components/ProfileSelect';
 import ProfileButton from '../components/ProfileButton';
 import ProfileErrorMessage from '../components/ProfileErrorMessage';
 import './Profile.css';
-import { useState } from 'react';
+import { FaPenToSquare } from "react-icons/fa6";
+import { useRef, useState } from 'react';
+import { Image } from 'semantic-ui-react';
 
-const Profile = ({currencies, languages, bio, setBio, location, setLocation, email, setEmail, phone, setPhone, currency, setCurrency, language, setLanguage, cardNumber, setCardNumber, cardDate, setCardDate, cardCVV, setCardCVV, cardName, setCardName  }) => {
+const Profile = ({currencies, languages, bio, setBio, location, setLocation, email, setEmail, phone, setPhone, currency, setCurrency, language, setLanguage, cardNumber, setCardNumber, cardDate, setCardDate, cardCVV, setCardCVV, cardName, setCardName, profileImage, setProfileImage  }) => {
 
   const handleBioChange = (e) => {
     setBio(e.target.value);
@@ -96,6 +98,23 @@ const Profile = ({currencies, languages, bio, setBio, location, setLocation, ema
     // TODO get profile from db
   }
 
+  // Image Ref
+  const imagePickRef = useRef(null);
+
+  const choseImage = () => {
+    if (imagePickRef.current) {
+      imagePickRef.current.click();
+    }
+  }
+
+  const onImageChange = (e) => {
+    e.persist();
+    const file = e.target.files[0];
+    const fileURL = URL.createObjectURL(file);
+    if(fileURL) setProfileImage(fileURL);
+  }
+
+  // Error States
   const [imageError, setImageError] = useState("");
   const [locationError, setLocationError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -111,8 +130,12 @@ const Profile = ({currencies, languages, bio, setBio, location, setLocation, ema
         <p className='title'>Account Settings</p>
         <div className='avatar_bio'>
           <div className='avatarContainer'>
-            <p className='avatarText'>Your profile picture</p>
-            <div className='avatar'>Upload your photo</div> {/* TODO */}
+            <div className='avatarText'>Your profile picture
+              <FaPenToSquare className='edit-icon' onClick={choseImage} />
+            </div>
+            <input type='file' ref={imagePickRef} onChange={onImageChange} hidden />
+            {profileImage ? (<Image src={profileImage} className='profileImage' /> ) 
+            : (<div className='avatar' onClick={choseImage} >Upload your photo</div>)}
             <ProfileErrorMessage ErrorMessage={imageError}/>
           </div>
           <div className='bioContainer'>
