@@ -1,12 +1,12 @@
 import ProductCard from "../components/ProductCard";
 import "./Shop.css";
 
-const Shop = ({ products, profileImage }) => {
+const Shop = ({ products }) => {
   return (
     <main className="shop">
       <div className="product-list">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} profileImage={profileImage}/>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </main>
