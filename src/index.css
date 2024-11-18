@@ -9,6 +9,7 @@ body {
     min-height: 100vh;
     display: flex;
     background-color: #efefef;
+    overflow-y: scroll;
 }
 
 #root {
