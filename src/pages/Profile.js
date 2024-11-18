@@ -7,7 +7,7 @@ import { FaPenToSquare } from "react-icons/fa6";
 import { useRef, useState } from 'react';
 import { Image } from 'semantic-ui-react';
 
-const Profile = ({currencies, languages, bio, setBio, location, setLocation, email, setEmail, phone, setPhone, currency, setCurrency, language, setLanguage, cardNumber, setCardNumber, cardDate, setCardDate, cardCVV, setCardCVV, cardName, setCardName, profileImage, setProfileImage  }) => {
+const Profile = ({ currencies, languages, bio, setBio, location, setLocation, email, setEmail, phone, setPhone, currency, setCurrency, language, setLanguage, cardNumber, setCardNumber, cardDate, setCardDate, cardCVV, setCardCVV, cardName, setCardName, profileImage, setProfileImage  }) => {
 
   const handleBioChange = (e) => {
     setBio(e.target.value);
