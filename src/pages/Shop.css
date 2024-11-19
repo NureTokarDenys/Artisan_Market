@@ -11,15 +11,15 @@
 }
 
 @media (max-width: 1200px) {
-    .product-list {
-      grid-template-columns: repeat(2, 1fr); 
-      padding: 0 20px; 
-    }
+  .product-list {
+    grid-template-columns: repeat(2, 1fr); 
+    padding: 0 20px; 
   }
+}
   
-  @media (max-width: 800px) {
-    .product-list {
-      grid-template-columns: 1fr; 
-      padding: 0 10px; 
-    }
+@media (max-width: 800px) {
+  .product-list {
+    grid-template-columns: 1fr; 
+    padding: 0 10px; 
   }
+}

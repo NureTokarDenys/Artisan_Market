@@ -8,6 +8,7 @@ import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
+import { PopupProvider } from './components/PopUpProvider';
 import './App.css';
 import { useState } from 'react';
 
@@ -104,7 +105,8 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+       <PopupProvider>
+        <Header />
           <Routes>
             <Route path="/" element={<Navigate to="/products" replace />} />
             
@@ -128,8 +130,9 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <Footer />
-    </div>
+        <Footer />
+    </PopupProvider>
+  </div>
   );
 }
 
