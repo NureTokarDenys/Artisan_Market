@@ -8,9 +8,7 @@ import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
-import { PopupProvider } from './helpers/PopUpProvider';
 import ProtectedRoute from './helpers/ProtectedRoute';
-import { AuthProvider } from './helpers/AuthContext';
 import './App.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -42,13 +40,15 @@ function App() {
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
   
     const getProducts = async () => {
       try {
-        const prod = await axios.get('/api/products');
-        if (isMounted) {
-          setProducts(prod.data);
-        }
+        const response = await axios.get('/api/products', {
+          signal: controller.signal
+        });
+
+        if (isMounted) setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -58,52 +58,49 @@ function App() {
   
     return () => {
       isMounted = false;
+      controller.abort();
     };
   }, []);
 
 
   return (
-    <AuthProvider>
-      <div className="App">
-        <PopupProvider>
-          <Header />
-            <Routes>
-              <Route path="/" element={<Navigate to="/products" replace />} />
-              
-              <Route path="/products" element={<Shop products={products} />} />
-              <Route path="/products/:id" element={<Product products={products} />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
+  <div className="App">
+      <Header />
+        <Routes>
+          <Route path="/" element={<Navigate to="/products" replace />} />
+          
+          <Route path="/products" element={<Shop products={products} />} />
+          <Route path="/products/:id" element={<Product products={products} />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
 
-              {/* Protected Routes */}
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile
-                      profile={profile}
-                      setProfile={setProfile}
-                      currencies={currencyDir}
-                      languages={languageDir}
-                    />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute>
-                    <Cart />
-                  </ProtectedRoute>
-                }
-              />
+          {/* Protected Routes */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile
+                  profile={profile}
+                  setProfile={setProfile}
+                  currencies={currencyDir}
+                  languages={languageDir}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          <Footer />
-      </PopupProvider>
-    </div>
-  </AuthProvider>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      <Footer />
+  </div>
   );
 }
 

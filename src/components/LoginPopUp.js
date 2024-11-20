@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { FaX } from "react-icons/fa6";
-import { usePopup } from '../helpers/PopUpProvider';
-import { useAuth } from '../helpers/AuthContext';
+import { usePopup } from '../hooks/usePopup';
+import { useAuth } from '../hooks/useAuth';
 import PopUpInput from './PopUpInput';
 import './LoginPopUp.css';
+import axios from 'axios';
 
 const LoginPopUp = () => {
   const { closePopup, switchPopup, handleLoginSuccess } = usePopup();
@@ -12,27 +13,53 @@ const LoginPopUp = () => {
     email: '',
     password: '',
   });
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const validateForm = () => {
+    const { email, password } = formData;
+
+    if (!email || !password) {
+      setError('All fields are required');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    setError(null);
+
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+
     try {
-      // Your login API call here
-      // const response = await loginUser(formData);
-      
-      // For demonstration, using mock data
-      const mockUserData = {
+      const response = await axios.post('/api/auth/login', {
         email: formData.email,
-        name: 'John Doe'
-      };
-      const mockToken = 'mock-token-123';
+        password: formData.password
+      });
+
+      const { userData, token } = response.data;
+
+      login(userData, token);
       
-      // Update auth context
-      login(mockUserData, mockToken);
-      
-      // Handle success (redirect, etc.)
       handleLoginSuccess();
+
     } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Login failed';
+      setError(errorMessage);
       console.error('Login failed:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -41,6 +68,7 @@ const LoginPopUp = () => {
       ...prev,
       [field]: e.target.value
     }));
+    setError(null);
   };
 
   useEffect(() => {
@@ -53,7 +81,6 @@ const LoginPopUp = () => {
   return (
     <div className="popup-overlay">
       <div className="popup-backdrop" onClick={closePopup} />
-      
       <div className="popup-container">
         <button className="close-button" onClick={closePopup}>
           <FaX size={24} />
@@ -79,8 +106,22 @@ const LoginPopUp = () => {
               onChange={handleChange('password')}
             />
             
-            <button type="submit" className="submit-button">
-              Login
+            {error && (
+              <div className="error-message" style={{
+                color: 'red',
+                marginBottom: '10px',
+                textAlign: 'center'
+              }}>
+                {error}
+              </div>
+            )}
+            
+            <button 
+              type="submit" 
+              className="submit-button" 
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 

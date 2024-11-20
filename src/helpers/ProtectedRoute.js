@@ -1,24 +1,26 @@
-// ProtectedRoute.jsx
 import { Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { usePopup, POPUP_TYPES } from './PopUpProvider';
-import { useAuth } from './AuthContext';
+import { POPUP_TYPES } from './PopUpProvider';
+import { useAuth } from '../hooks/useAuth';
+import usePopup from '../hooks/usePopup';
 
 const ProtectedRoute = ({ children }) => {
   const { openPopup } = usePopup();
-  const { isAuthenticated } = useAuth();
+  const { auth } = useAuth(); 
   const location = useLocation();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      // Store the current path before opening popup
+    if (!auth.isAuthenticated) {  
+      const previousPath = location.state?.from || '/products';
       sessionStorage.setItem('intendedPath', location.pathname);
+      sessionStorage.setItem('previousPath', previousPath);
       openPopup(POPUP_TYPES.LOGIN);
     }
-  }, [isAuthenticated, openPopup, location]);
+  }, [auth.isAuthenticated, openPopup, location]);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/products" replace />;
+  if (!auth.isAuthenticated) {  
+    const previousPath = sessionStorage.getItem('previousPath') || '/products';
+    return <Navigate to={previousPath} replace />;
   }
 
   return children;

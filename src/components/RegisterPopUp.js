@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { usePopup } from '../helpers/PopUpProvider';
-import { useAuth } from '../helpers/AuthContext';
 import { FaX } from "react-icons/fa6";
+import { usePopup } from '../hooks/usePopup';
+import { useAuth } from '../hooks/useAuth';
 import PopUpInput from './PopUpInput';
 import PopUpSelect from './PopUpSelect';
 import './RegisterPopUp.css';
+import axios from 'axios';
 
 const RegisterPopup = () => {
   const [formData, setFormData] = useState({
@@ -14,32 +14,69 @@ const RegisterPopup = () => {
     surname: '',
     password: '',
     confirmPassword: '',
-    role: ''
+    role: 'user'
   });
+  const [error, setError] = useState(null);
+
+  const { closePopup, switchPopup, handleRegistrationSuccess } = usePopup();
+  const { login } = useAuth();
 
   const handleChange = (field) => (e) => {
     setFormData(prev => ({
       ...prev,
       [field]: e.target.value
     }));
+    setError(null);
   };
 
-  const { closePopup, switchPopup } = usePopup();
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  
+  const validateForm = () => {
+    const { email, password, confirmPassword, name, surname } = formData;
+    
+    if (!email || !password || !confirmPassword || !name || !surname) {
+      setError('All fields are required');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords must match');
+      return false;
+    }
+
+    if (password.length < 8) {
+      setError('Password must be at least 8 symbols');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    setError(null);
+
+    if (!validateForm()) return;
+
     try {
-      // Your registration API call here
-      // const response = await registerUser(formData);
-      
-      // Close register popup
-      closePopup();
-      
-      // Navigate to profile (will trigger login popup)
-      navigate('/profile');
+      const response = await axios.post('/api/auth/register', {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        surname: formData.surname,
+        role: formData.role
+      });
+
+      handleRegistrationSuccess();
+
     } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Registration failed';
+      setError(errorMessage);
       console.error('Registration failed:', error);
     }
   };
@@ -108,6 +145,16 @@ const RegisterPopup = () => {
               value={formData.confirmPassword}
               onChange={handleChange('confirmPassword')}
             />
+
+            {error && (
+              <div className="error-message" style={{
+                color: 'red',
+                marginBottom: '10px',
+                textAlign: 'center'
+              }}>
+                {error}
+              </div>
+            )}
 
             <button type="submit" className="submit-button">
               Register

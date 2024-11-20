@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import RegisterPopUp from '../components/RegisterPopUp';
 import LoginPopUp from '../components/LoginPopUp';
 
@@ -8,20 +8,26 @@ export const POPUP_TYPES = {
   LOGIN: 'LOGIN',
 };
 
-const PopupContext = createContext();
+export const PopupContext = createContext();
 
 export const PopupProvider = ({ children }) => {
   const [activePopup, setActivePopup] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const openPopup = (type) => {
+    if (!sessionStorage.getItem('previousPath')) {
+      sessionStorage.setItem('previousPath', location.pathname);
+    }
     setActivePopup(type);
   };
 
   const closePopup = () => {
     setActivePopup(null);
-    // Clear intended path when explicitly closing
+    const previousPath = sessionStorage.getItem('previousPath');
+    navigate(previousPath, { replace: true });
     sessionStorage.removeItem('intendedPath');
+    sessionStorage.removeItem('previousPath');
   };
 
   const switchPopup = () => {
@@ -37,17 +43,18 @@ export const PopupProvider = ({ children }) => {
     closePopup();
     
     if (intendedPath) {
-      // Clear the stored path
-      sessionStorage.removeItem('intendedPath');
-      // Navigate to the intended path
       navigate(intendedPath, { replace: true });
+      sessionStorage.removeItem('intendedPath');
+      sessionStorage.removeItem('previousPath');
     }
   };
 
   const handleRegistrationSuccess = () => {
     closePopup();
-    // After registration, redirect to profile which will trigger login
-    navigate('/profile');
+    const currentPath = location.pathname;
+    navigate('/profile', { 
+      state: { from: currentPath }
+    });
   };
 
   return (
@@ -70,12 +77,4 @@ export const PopupProvider = ({ children }) => {
       )}
     </PopupContext.Provider>
   );
-};
-
-export const usePopup = () => {
-  const context = useContext(PopupContext);
-  if (!context) {
-    throw new Error('usePopup must be used within a PopupProvider');
-  }
-  return context;
 };

@@ -6,6 +6,7 @@ import './Profile.css';
 import { FaPenToSquare } from "react-icons/fa6";
 import { useRef, useState } from 'react';
 import { Image } from 'semantic-ui-react';
+import { axiosPrivate } from '../api/axios';
 
 const Profile = ({ profile, setProfile, currencies, languages }) => {
   // Error States
@@ -103,9 +104,34 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
 
   // Update Profile Logic
   const updateProfile = (e) => {
-    e.preventDefault();
-    // TODO: save profile to db
+    e.preventDefault(); 
+    axiosPrivate.post('/api/profile/update', );
+
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+  
+    const getProfile = async () => {
+      try {
+        const response = await axiosPrivate.get(`/api/profile/${1}`, {
+          signal: controller.signal
+        });
+
+        if (isMounted) setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+  
+    getProfile();
+  
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
 
   // Reset Profile Logic
   const resetProfile = (e) => {
