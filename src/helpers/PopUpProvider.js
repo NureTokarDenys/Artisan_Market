@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
-import RegisterPopUp from './RegisterPopUp';
-import LoginPopUp from './LoginPopUp';
+import { useNavigate } from 'react-router-dom';
+import RegisterPopUp from '../components/RegisterPopUp';
+import LoginPopUp from '../components/LoginPopUp';
 
 export const POPUP_TYPES = {
   REGISTER: 'REGISTER',
@@ -11,6 +12,7 @@ const PopupContext = createContext();
 
 export const PopupProvider = ({ children }) => {
   const [activePopup, setActivePopup] = useState(null);
+  const navigate = useNavigate();
 
   const openPopup = (type) => {
     setActivePopup(type);
@@ -18,6 +20,8 @@ export const PopupProvider = ({ children }) => {
 
   const closePopup = () => {
     setActivePopup(null);
+    // Clear intended path when explicitly closing
+    sessionStorage.removeItem('intendedPath');
   };
 
   const switchPopup = () => {
@@ -28,6 +32,24 @@ export const PopupProvider = ({ children }) => {
     );
   };
 
+  const handleLoginSuccess = () => {
+    const intendedPath = sessionStorage.getItem('intendedPath');
+    closePopup();
+    
+    if (intendedPath) {
+      // Clear the stored path
+      sessionStorage.removeItem('intendedPath');
+      // Navigate to the intended path
+      navigate(intendedPath, { replace: true });
+    }
+  };
+
+  const handleRegistrationSuccess = () => {
+    closePopup();
+    // After registration, redirect to profile which will trigger login
+    navigate('/profile');
+  };
+
   return (
     <PopupContext.Provider
       value={{
@@ -35,14 +57,16 @@ export const PopupProvider = ({ children }) => {
         openPopup,
         closePopup,
         switchPopup,
+        handleLoginSuccess,
+        handleRegistrationSuccess,
       }}
     >
       {children}
       {activePopup === POPUP_TYPES.REGISTER && (
-        <RegisterPopUp onClose={closePopup} switchPopup={switchPopup} />
+        <RegisterPopUp />
       )}
       {activePopup === POPUP_TYPES.LOGIN && (
-        <LoginPopUp onClose={closePopup} switchPopup={switchPopup} />
+        <LoginPopUp />
       )}
     </PopupContext.Provider>
   );

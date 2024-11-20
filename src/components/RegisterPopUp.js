@@ -1,10 +1,13 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { usePopup } from '../helpers/PopUpProvider';
+import { useAuth } from '../helpers/AuthContext';
+import { FaX } from "react-icons/fa6";
 import PopUpInput from './PopUpInput';
 import PopUpSelect from './PopUpSelect';
-import { useState, useEffect } from 'react';
-import { FaX } from "react-icons/fa6";
 import './RegisterPopUp.css';
 
-const RegisterPopup = ({ onClose, switchPopup }) => {
+const RegisterPopup = () => {
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -21,8 +24,24 @@ const RegisterPopup = ({ onClose, switchPopup }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const { closePopup, switchPopup } = usePopup();
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      // Your registration API call here
+      // const response = await registerUser(formData);
+      
+      // Close register popup
+      closePopup();
+      
+      // Navigate to profile (will trigger login popup)
+      navigate('/profile');
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
   };
 
   useEffect(() => {
@@ -34,10 +53,10 @@ const RegisterPopup = ({ onClose, switchPopup }) => {
 
   return (
     <div className="popup-overlay">
-      <div className="popup-backdrop" onClick={onClose} />
+      <div className="popup-backdrop" onClick={closePopup} />
       
       <div className="popup-container">
-        <button className="close-button" onClick={onClose}>
+        <button className="close-button" onClick={closePopup}>
           <FaX size={24} />
         </button>
 

@@ -1,29 +1,46 @@
-import PopUpInput from './PopUpInput';
-import PopUpSelect from './PopUpSelect';
 import { useState, useEffect } from 'react';
 import { FaX } from "react-icons/fa6";
-import { usePopup, POPUP_TYPES } from './PopUpProvider';
+import { usePopup } from '../helpers/PopUpProvider';
+import { useAuth } from '../helpers/AuthContext';
+import PopUpInput from './PopUpInput';
 import './LoginPopUp.css';
 
-const LoginPopUp = ({ onClose, switchPopup }) => {
+const LoginPopUp = () => {
+  const { closePopup, switchPopup, handleLoginSuccess } = usePopup();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
-    name: '',
-    surname: '',
     password: '',
-    confirmPassword: '',
-    role: ''
   });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Your login API call here
+      // const response = await loginUser(formData);
+      
+      // For demonstration, using mock data
+      const mockUserData = {
+        email: formData.email,
+        name: 'John Doe'
+      };
+      const mockToken = 'mock-token-123';
+      
+      // Update auth context
+      login(mockUserData, mockToken);
+      
+      // Handle success (redirect, etc.)
+      handleLoginSuccess();
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
 
   const handleChange = (field) => (e) => {
     setFormData(prev => ({
       ...prev,
       [field]: e.target.value
     }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
   };
 
   useEffect(() => {
@@ -35,10 +52,10 @@ const LoginPopUp = ({ onClose, switchPopup }) => {
 
   return (
     <div className="popup-overlay">
-      <div className="popup-backdrop" onClick={onClose} />
+      <div className="popup-backdrop" onClick={closePopup} />
       
       <div className="popup-container">
-        <button className="close-button" onClick={onClose}>
+        <button className="close-button" onClick={closePopup}>
           <FaX size={24} />
         </button>
 
@@ -46,7 +63,6 @@ const LoginPopUp = ({ onClose, switchPopup }) => {
           <h2 className="form-title">Sign in</h2>
           
           <form onSubmit={handleSubmit}>
-      
             <PopUpInput
               label="Email"
               type="email"
