@@ -1,17 +1,23 @@
 const express = require('express');
 const router = express.Router();
+const readFile = require('../data/readData');
+const writeFile = require('../data/writeData');
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Тимчасовий масив продуктів
-let products = [];
+const DATA_PATH = './src/data/products.json';
+let products = readFile(DATA_PATH);
 
 // Додати продукт
-router.post('/', (req, res) => {
-  const { name, price } = req.body;
-  if (!name || !price) {
-    return res.status(400).json({ message: 'Name and price are required' });
+router.post('/', authMiddleware, (req, res) => {
+  const { name, price, description, rating, totalRatings, quantity, images, colors } = req.body;
+  if (!name || !price || !description) {
+    return res.status(400).json({ message: 'Name, price and description are required' });
   }
-  const product = { id: products.length + 1, name, price };
+  const product = { id: products.length + 1, name, price, description, rating, totalRatings, quantity, images, colors };
   products.push(product);
+  writeFile(DATA_PATH, products);
+
   res.status(201).json({ message: 'Product added', product });
 });
 

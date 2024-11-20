@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const authMiddleware = require('./src/middleware/authMiddleware');
 
 dotenv.config();
 
@@ -15,8 +16,11 @@ app.use(express.json());
 const authRoutes = require('./src/routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
-// Start Server
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
-
 const productRoutes = require('./src/routes/productRoutes');
 app.use('/api/products', productRoutes);
+
+const profileRoutes = require('./src/routes/profileRoutes');
+app.use('/api/profile', profileRoutes);
+
+// Start Server
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
