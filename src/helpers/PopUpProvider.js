@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import RegisterPopUp from '../components/RegisterPopUp';
 import LoginPopUp from '../components/LoginPopUp';

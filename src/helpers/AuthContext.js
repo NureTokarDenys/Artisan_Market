@@ -1,22 +1,30 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { axiosPrivate } from '../api/axios';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({ isAuthenticated: false, user: null });
+  const [auth, setAuth] = useState({ isAuthenticated: false, userId: null, token: null });
+  const navigate = useNavigate();
 
-  const login = (userData, token) => {
+  const login = (userId, accessToken) => {
     setAuth({
       isAuthenticated: true,
-      user: userData,
-      token,
+      userId: userId,
+      accessToken,
     });
-    localStorage.setItem('token', token); 
   };
 
   const logout = () => {
-    setAuth({ isAuthenticated: false, user: null, token: null });
-    localStorage.removeItem('token'); 
+    navigate("/products", { replace: true });
+    setAuth({ isAuthenticated: false, userId: null, token: null });
+    try {
+      axiosPrivate.post("/api/auth/logout");
+      
+    }catch(err){
+      console.error(err);
+    }
   };
 
   return (

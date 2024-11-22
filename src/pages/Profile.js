@@ -4,11 +4,18 @@ import ProfileButton from '../components/ProfileButton';
 import ProfileErrorMessage from '../components/ProfileErrorMessage';
 import './Profile.css';
 import { FaPenToSquare } from "react-icons/fa6";
-import { useRef, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Image } from 'semantic-ui-react';
-import { axiosPrivate } from '../api/axios';
+import useAuth from '../hooks/useAuth';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const Profile = ({ profile, setProfile, currencies, languages }) => {
+  const { auth, logout } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+
+  const [profileMessage, setProfileMessage] = useState("");
+  const [profileError, setProfileError] = useState("");
+
   // Error States
   const [errors, setErrors] = useState({
     imageError: "",
@@ -18,7 +25,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     cardNumberError: "",
     cardDateError: "",
     cardCVVError: "",
-    cardNameError: ""
+    cardNameError: "",
   });
 
   // Handle Changes for all fields
@@ -104,39 +111,28 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
 
   // Update Profile Logic
   const updateProfile = (e) => {
-    e.preventDefault(); 
-    axiosPrivate.post('/api/profile/update', );
-
+    e.preventDefault();
+    try { 
+    axiosPrivate.post(`/api/profile/update/${auth.userId}`, {
+      profileImage: profile.profileImage, 
+      bio: profile.bio, 
+      location: profile.location, 
+      phone: profile.phone, 
+      email: profile.email,
+      currency: profile.currency, 
+      language: profile.language, 
+      isSet: true
+    });
+    setProfileMessage('Updated successfully');
+  }
+  catch(err) {
+    console.error("Error: " + err);
+  }
   };
-
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
   
-    const getProfile = async () => {
-      try {
-        const response = await axiosPrivate.get(`/api/profile/${1}`, {
-          signal: controller.signal
-        });
-
-        if (isMounted) setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-  
-    getProfile();
-  
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
-
-  // Reset Profile Logic
   const resetProfile = (e) => {
     e.preventDefault();
-    // TODO: get profile from db
+    getProfile("Profile reset");
   };
 
   // Image Ref
@@ -153,6 +149,41 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     const file = e.target.files[0];
     const fileURL = URL.createObjectURL(file);
     if (fileURL) setProfile((prevProfile) => ({ ...prevProfile, profileImage: fileURL }));
+  };
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let isMounted = true; 
+    
+    setProfileError("");
+    setProfileMessage("");
+    
+    console.log("!profile: " + !profile.isSet + ", auth.token: " + (auth?.token ? "true" : "false") + ", auth: " + JSON.stringify(auth));
+    
+    if (!profile.isSet && auth?.token) {
+      getProfile("", controller.signal, isMounted);
+    }
+  
+    return () => {
+      isMounted = false; 
+      controller.abort();
+    };
+  }, [profile.isSet, auth?.token]);
+  
+  const getProfile = async (message = "", signal = new AbortController().signal, isMounted = true) => {
+    try {
+      const response = await axiosPrivate.get(`/api/profile/${auth.userId}`, { signal });
+      if (isMounted) {
+        setProfile(response.data);
+        setProfileMessage(message);
+      }
+    } catch (err) {
+      if(!err?.code === "ERR_CANCELED"){
+        console.error('Error fetching profile:', err);
+      }else{
+        setProfileError(JSON.stringify(err));
+      }
+    }
   };
 
   return (
@@ -188,6 +219,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
         <div className='additionalInfo'>
           <ProfileInput
             title={"Location"}
+            name={"location"}
             placeholder='For example: Paris, France'
             inputState={profile.location}
             inputSetState={handleChange}
@@ -197,6 +229,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
           />
           <ProfileInput
             title={"Email"}
+            name='email'
             inputState={profile.email}
             inputSetState={handleChange}
             errorState={errors.emailError}
@@ -205,6 +238,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
           />
           <ProfileInput
             title={"Phone number"}
+            name='phone'
             inputState={profile.phone}
             inputSetState={handleChange}
             errorState={errors.phoneError}
@@ -264,19 +298,43 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             validate={validateCardName}
           />
         </div>
-        <div className='actions'>
-          <ProfileButton
-            title={"Update profile"}
-            bgColor={"#84a98c"}
-            hoverColor={"#3acf46"}
-            action={updateProfile}
-          />
-          <ProfileButton
-            title={"Reset"}
-            bgColor={"#efefef"}
-            hoverColor={"#d3d3d3"}
-            action={resetProfile}
-          />
+        <div className='actions-info-logout'>
+          <div className='actions-info'>
+            <div className='actions'>
+              <ProfileButton
+                title={"Update profile"}
+                bgColor={"#84a98c"}
+                hoverColor={"#3acf46"}
+                action={updateProfile}
+              />
+              <ProfileButton
+                title={"Reset"}
+                bgColor={"#efefef"}
+                hoverColor={"#d3d3d3"}
+                action={resetProfile}
+              />
+              <div className='messages'>
+              {profileMessage && (
+                  <div className="message success">
+                    {profileMessage}
+                  </div>
+              )}
+              {profileError && (
+                  <div className="message error">
+                    {profileError}
+                  </div>
+              )}
+              </div>
+            </div>
+          </div>
+          <div className='logout'>
+            <ProfileButton
+                title={"Logout"}
+                bgColor={"#d64545"}
+                hoverColor={"#f07a7a"}
+                action={logout}
+              />
+          </div>
         </div>
       </form>
     </div>

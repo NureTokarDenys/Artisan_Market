@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaX } from "react-icons/fa6";
 import { usePopup } from '../hooks/usePopup';
-import { useAuth } from '../hooks/useAuth';
 import PopUpInput from './PopUpInput';
 import PopUpSelect from './PopUpSelect';
 import './RegisterPopUp.css';
@@ -19,7 +18,6 @@ const RegisterPopup = () => {
   const [error, setError] = useState(null);
 
   const { closePopup, switchPopup, handleRegistrationSuccess } = usePopup();
-  const { login } = useAuth();
 
   const handleChange = (field) => (e) => {
     setFormData(prev => ({
@@ -36,7 +34,7 @@ const RegisterPopup = () => {
       setError('All fields are required');
       return false;
     }
-
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address');

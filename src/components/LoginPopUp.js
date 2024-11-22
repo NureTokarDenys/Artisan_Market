@@ -23,13 +23,13 @@ const LoginPopUp = () => {
       setError('All fields are required');
       return false;
     }
-
+    /* turned off for better testing
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address');
       return false;
     }
-
+    */
     return true;
   };
 
@@ -46,11 +46,13 @@ const LoginPopUp = () => {
       const response = await axios.post('/api/auth/login', {
         email: formData.email,
         password: formData.password
+      }, {
+        withCredentials: true
       });
 
-      const { userData, token } = response.data;
+      const { userId, accessToken } = response.data;
 
-      login(userData, token);
+      login(userId, accessToken);
       
       handleLoginSuccess();
 
@@ -71,13 +73,6 @@ const LoginPopUp = () => {
     setError(null);
   };
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
-
   return (
     <div className="popup-overlay">
       <div className="popup-backdrop" onClick={closePopup} />
@@ -92,7 +87,7 @@ const LoginPopUp = () => {
           <form onSubmit={handleSubmit}>
             <PopUpInput
               label="Email"
-              type="email"
+              type="text"
               placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange('email')}
@@ -137,7 +132,7 @@ const LoginPopUp = () => {
             <p className="image-description">Your marketplace for authentic handcrafted items</p>
           </div>
           <img
-            src="/api/placeholder/800/600"
+            src=""
             alt="Artisan products"
             className="image"
           />
