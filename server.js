@@ -40,5 +40,8 @@ app.use('/api/products', productRoutes);
 const profileRoutes = require('./src/routes/profileRoutes');
 app.use('/api/profile', profileRoutes);
 
+const s3Routes = require('./src/routes/s3Routes');
+app.use('/api/s3', s3Routes);
+
 // Start Server
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
