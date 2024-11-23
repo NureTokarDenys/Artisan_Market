@@ -8,6 +8,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Image } from 'semantic-ui-react';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import axios from '../api/axios';
 
 const Profile = ({ profile, setProfile, currencies, languages }) => {
   const { auth, logout } = useAuth();
@@ -15,6 +16,8 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
 
   const [profileMessage, setProfileMessage] = useState("");
   const [profileError, setProfileError] = useState("");
+
+  const [imageFile, setImageFile] = useState("");
 
   // Error States
   const [errors, setErrors] = useState({
@@ -109,10 +112,24 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     if (!cardNameRegex.test(name)) return "Invalid name. Make sure it starts with a capital letter and contains only letters and spaces.";
   };
 
+  const postImage = async (file) => {
+    const response = await axios.get("/api/s3/url");
+    const { url } = response.data;
+    axios.put(url, file, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    const imageUrl = url.split('?')[0];
+    setProfile((prevProfile) => ({ ...prevProfile, profileImage: imageUrl }));
+  }
+
   // Update Profile Logic
   const updateProfile = (e) => {
     e.preventDefault();
     try { 
+    postImage(imageFile);
+
     axiosPrivate.post(`/api/profile/update/${auth.userId}`, {
       profileImage: profile.profileImage, 
       bio: profile.bio, 
@@ -144,11 +161,13 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     }
   };
 
-  const onImageChange = (e) => {
+  const onImageChange = async (e) => {
     e.persist();
     const file = e.target.files[0];
     const fileURL = URL.createObjectURL(file);
-    if (fileURL) setProfile((prevProfile) => ({ ...prevProfile, profileImage: fileURL }));
+    if (fileURL) setProfile((prevProfile) => ({ ...prevProfile, profileImage: fileURL })); // temp
+
+    setImageFile(file);
   };
 
   useEffect(() => {
