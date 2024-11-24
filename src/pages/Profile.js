@@ -121,17 +121,17 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
       }
     });
     const imageUrl = url.split('?')[0];
-    setProfile((prevProfile) => ({ ...prevProfile, profileImage: imageUrl }));
+    return imageUrl;
   }
 
   // Update Profile Logic
-  const updateProfile = (e) => {
+  const updateProfile = async (e) => {
     e.preventDefault();
     try { 
-    postImage(imageFile);
+    const imageURL = await postImage(imageFile);
 
     axiosPrivate.post(`/api/profile/update/${auth.userId}`, {
-      profileImage: profile.profileImage, 
+      profileImage: imageURL, 
       bio: profile.bio, 
       location: profile.location, 
       phone: profile.phone, 
