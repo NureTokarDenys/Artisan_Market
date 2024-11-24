@@ -32,7 +32,7 @@
 }
 
 .avatar_bio {
-    height: 230px;
+    height: 250px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;

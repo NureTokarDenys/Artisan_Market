@@ -16,12 +16,11 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  const logout = () => {
+  const logout = async () => {
     navigate("/products", { replace: true });
-    setAuth({ isAuthenticated: false, userId: null, token: null });
     try {
-      axiosPrivate.post("/api/auth/logout");
-      
+      const response = await axiosPrivate.post("/api/auth/logout");
+      setAuth({ isAuthenticated: false, userId: null, token: null });
     }catch(err){
       console.error(err);
     }

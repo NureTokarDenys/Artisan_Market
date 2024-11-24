@@ -164,11 +164,49 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
   const onImageChange = async (e) => {
     e.persist();
     const file = e.target.files[0];
-    const fileURL = URL.createObjectURL(file);
-    if (fileURL) setProfile((prevProfile) => ({ ...prevProfile, profileImage: fileURL })); // temp
+  
+    // Check if a file is selected
+    if (!file) return;
 
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      imageError: "",
+    }));
+  
+    // Define size limit in bytes (e.g., 2MB)
+    const maxSize = 2 * 1024 * 1024; // 2MB
+  
+    // Allowed extensions
+    const allowedExtensions = ["image/png", "image/jpeg"];
+  
+    // Validate file type
+    if (!allowedExtensions.includes(file.type)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        imageError: "Only .png, .jpg files are allowed.",
+      }));
+      return;
+    }
+  
+    // Validate file size
+    if (file.size > maxSize) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        imageError: "File size must be less than 2MB.",
+      }));
+      return;
+    }
+  
+    // Generate URL and update profile
+    const fileURL = URL.createObjectURL(file);
+    if (fileURL) {
+      setProfile((prevProfile) => ({ ...prevProfile, profileImage: fileURL }));
+    }
+  
+    // Save file for further use
     setImageFile(file);
   };
+  
 
   useEffect(() => {
     const controller = new AbortController();
