@@ -132,7 +132,7 @@ const LoginPopUp = () => {
             <p className="image-description">Your marketplace for authentic handcrafted items</p>
           </div>
           <img
-            src=""
+            src="https://artisan-market.s3.eu-central-1.amazonaws.com/c4ee69d71d3d6fb0625a3a80898f9719.jpg"
             alt="Artisan products"
             className="image"
           />

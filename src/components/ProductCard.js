@@ -11,8 +11,10 @@ const ProductCard = ({ product }) => {
           alt={product.name}
           className="product-image"
         />
-        <h2 className="product-name">{product.name}</h2>
-        <p className="product-price">${product.price.toFixed(2)}</p>
+        <div className='product-info'>
+          <h2 className="product-name">{product.name}</h2>
+          <p className="product-price">${product.price.toFixed(2)}</p>
+        </div>
       </Link>
     </div>
   );
