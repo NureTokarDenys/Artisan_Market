@@ -100,6 +100,11 @@ const LoginPopUp = () => {
               value={formData.password}
               onChange={handleChange('password')}
             />
+
+              
+            <p className="forget-text">
+              <span className="forget-link" onClick={() => {}}>Forgot password?</span>
+            </p>
             
             {error && (
               <div className="error-message" style={{
@@ -124,6 +129,7 @@ const LoginPopUp = () => {
             Don't have an account?{' '} 
             <span className="login-link" onClick={switchPopup}>Register</span>
           </p>
+          
         </div>
 
         <div className="image-section">

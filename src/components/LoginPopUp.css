@@ -115,10 +115,16 @@
     color: #666;
   }
   
-  .login-link {
+  .login-link, .forget-link {
     color: #4CAF50;
     text-decoration: none;
     cursor: pointer;
+  }
+
+  .forget-text {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
   }
   
   .login-link:hover {
