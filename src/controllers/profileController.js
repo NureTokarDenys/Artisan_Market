@@ -1,53 +1,7 @@
-const express = require('express');
-const router = express.Router();
 const { connectDB } = require('../config/db');
 const { ObjectId } = require('mongodb');
-const authMiddleware = require('../middleware/authMiddleware');
-const {
-    addProfile,
-    getProfile,
-    updateProfile,
-    deleteProfile
-  } = require('../controllers/profileController'); // Імпорт контролерів профілю
-  
-  // Захищені маршрути для профілів
-  router.post('/', authMiddleware, addProfile); // Додавання профілю
-  router.get('/:id', authMiddleware, getProfile); // Отримання профілю за ID
-  router.put('/:id', authMiddleware, updateProfile); // Оновлення профілю
-  router.delete('/:id', authMiddleware, deleteProfile); // Видалення профілю
 
-router.get('/', authMiddleware, async (req, res) => {
-    try {
-        const db = await connectDB();
-        const profilesCollection = db.collection('Profiles');
-
-        const profiles = await profilesCollection.find().toArray();
-        res.status(200).json(profiles);
-    } catch (error) {
-        console.error('Error fetching profiles:', error);
-        res.status(500).json({ message: 'Failed to fetch profiles', error });
-    }
-});
-
-router.get('/:id', authMiddleware, async (req, res) => {
-    const id = req.params.id;
-    try {
-        const db = await connectDB();
-        const profilesCollection = db.collection('Profiles');
-
-        const userProfile = await profilesCollection.findOne({ userId: id });
-        if (!userProfile) {
-            return res.status(404).json({ message: 'User profile does not exist' });
-        }
-
-        res.status(200).json(userProfile);
-    } catch (error) {
-        console.error('Error fetching profile:', error);
-        res.status(500).json({ message: 'Failed to fetch profile', error });
-    }
-});
-
-router.post('/', authMiddleware, async (req, res) => {
+exports.addProfile = async (req, res) => {
     try {
         const db = await connectDB();
         const profilesCollection = db.collection('Profiles');
@@ -76,9 +30,27 @@ router.post('/', authMiddleware, async (req, res) => {
         console.error('Error adding profile:', error);
         res.status(500).json({ message: 'Failed to add profile', error });
     }
-});
+};
 
-router.put('/:id', authMiddleware, async (req, res) => {
+exports.getProfile = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const db = await connectDB();
+        const profilesCollection = db.collection('Profiles');
+
+        const userProfile = await profilesCollection.findOne({ userId: id });
+        if (!userProfile) {
+            return res.status(404).json({ message: 'User profile does not exist' });
+        }
+
+        res.status(200).json(userProfile);
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        res.status(500).json({ message: 'Failed to fetch profile', error });
+    }
+};
+
+exports.updateProfile = async (req, res) => {
     const id = req.params.id;
     try {
         const db = await connectDB();
@@ -100,9 +72,9 @@ router.put('/:id', authMiddleware, async (req, res) => {
         console.error('Error updating profile:', error);
         res.status(500).json({ message: 'Failed to update profile', error });
     }
-});
+};
 
-router.delete('/:id', authMiddleware, async (req, res) => {
+exports.deleteProfile = async (req, res) => {
     const id = req.params.id;
     try {
         const db = await connectDB();
@@ -119,6 +91,4 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         console.error('Error deleting profile:', error);
         res.status(500).json({ message: 'Failed to delete profile', error });
     }
-});
-
-module.exports = router;
+};

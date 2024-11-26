@@ -24,3 +24,7 @@ app.use('/api/auth', authRoutes);
 
 const productRoutes = require('./src/routes/productRoutes');
 app.use('/api/products', productRoutes);
+
+const profileRoutes = require('./src/routes/profileRoutes'); // Імпортуйте маршрути профілів
+app.use('/api/profiles', profileRoutes); // Підключіть маршрути профілів
+
