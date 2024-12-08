@@ -46,6 +46,7 @@ function App() {
             const response = await axios.get('/api/auth/status', {
                 withCredentials: true,
             });
+
             console.log("status:" + response.data.authenticated);
             if (response.data.authenticated) {
                 setAuth({ isAuthenticated: true, userId: response.data.userId, token: response.data.accessToken });

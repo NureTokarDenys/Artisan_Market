@@ -147,8 +147,9 @@ const RegisterPopup = () => {
             {error && (
               <div className="error-message" style={{
                 color: 'red',
-                marginBottom: '10px',
-                textAlign: 'center'
+                margin: '0',
+                textAlign: 'center',
+                fontSize: '15px'
               }}>
                 {error}
               </div>

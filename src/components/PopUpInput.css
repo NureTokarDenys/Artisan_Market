@@ -1,21 +1,21 @@
 .input-group {
-    margin-bottom: 16px;
+    margin-bottom: 4px;
 }
 
 .input-label {
     display: block;
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     color: #333;
 }
 
 .input-field {
     width: 100%;
-    padding: 8px 12px;
+    padding: 4px 6px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .input-field:focus {

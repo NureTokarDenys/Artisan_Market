@@ -10,7 +10,7 @@ const Product = ({ products }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(0);
 
-  const product = products[id-1];
+  const product = products.find(item => item._id === id);
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
