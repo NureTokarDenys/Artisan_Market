@@ -1,37 +1,49 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { POPUP_TYPES } from './PopUpProvider';
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import usePopup from '../hooks/usePopup';
 import { Loader } from '../components/Loader';
 
 const ProtectedRoute = ({ children }) => {
-  const { auth, checkLoginStatus } = useAuth();
   const { openPopup } = usePopup();
+  const { auth, checkLoginStatus } = useAuth(); 
   const location = useLocation();
-
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const verifyAuth = async () => {
-      await checkLoginStatus(); 
-      setLoading(false); 
+      try {
+        await checkLoginStatus(); 
+      } catch (error) {
+        console.error('Error during authentication check:', error);
+      } finally {
+        setLoading(false); 
+      }
     };
+
     verifyAuth();
   }, []);
 
+  useEffect(() => {
+    if (!auth.isAuthenticated) { 
+      const previousPath = location.state?.from || '/products';
+      sessionStorage.setItem('intendedPath', location.pathname);
+      sessionStorage.setItem('previousPath', previousPath);
+      openPopup(POPUP_TYPES.LOGIN);
+    }
+  }, [auth.isAuthenticated, openPopup, location]);
+
+  if (!auth.isAuthenticated) {  
+    const previousPath = sessionStorage.getItem('previousPath') || '/products';
+    return <Navigate to={previousPath} replace />;
+  }
+
   if (loading) {
-    return <Loader size="lg" color="blue" text="Checking authentication..." />;
+    return <Loader size='lg' color='red' text="Loading..." />;
   }
 
-  if (!auth.isAuthenticated) {
-    // Redirect to login popup or default route if unauthenticated
-    sessionStorage.setItem('intendedPath', location.pathname); // Save the intended path
-    openPopup(POPUP_TYPES.LOGIN);
-    return <Navigate to="/products" replace />;
-  }
-
-  return children; // Render the protected content if authenticated
+  return children;
 };
 
 export default ProtectedRoute;
