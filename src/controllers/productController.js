@@ -40,12 +40,12 @@ exports.updateProduct = async (req, res) => {
 
 // Delete a product
 exports.deleteProduct = async (req, res) => {
+  const { id } = req.params;
   try {
     const db = await connectDB();
-    const { id } = req.params;
     const result = await db.collection('Products').deleteOne({ _id: new ObjectId(id) });
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete product' });
+    res.status(500).json({ error: 'Failed to delete product ' + id});
   }
 };

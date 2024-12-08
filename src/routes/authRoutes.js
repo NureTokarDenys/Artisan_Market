@@ -1,15 +1,19 @@
 const express = require('express');
-const { getAllUsers, addUser, updateUser, deleteUser, loginUser } = require('../controllers/authController');
+const { addUser, updateUser, deleteUser, loginUser, refreshUser, logoutUser, getUserStatus } = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Route для реєстрації користувача
 router.post('/register', addUser);
-
-// Інші маршрути
-router.get('/', getAllUsers);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
 router.post('/login', loginUser);
+
+router.post('/refresh', refreshUser);
+router.get('/status', getUserStatus);
+router.post('/logout', authMiddleware, logoutUser);
+
+router.put('/:id', authMiddleware, updateUser);
+router.delete('/:id', authMiddleware, deleteUser);
+
+
 
 module.exports = router;
