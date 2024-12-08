@@ -243,6 +243,24 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    setProfile({
+      bio: "",
+      location: "",
+      phone: "",
+      email: "",
+      currency: "",
+      language: "",
+      cardNumber: "",
+      cardDate: "",
+      cardCVV: "",
+      cardName: "",
+      profileImage: "", 
+      isSet: false
+    });
+  }
+
   return (
     <div className='main'>
       <form className='profile'>
@@ -389,7 +407,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
                 title={"Logout"}
                 bgColor={"#d64545"}
                 hoverColor={"#f07a7a"}
-                action={logout}
+                action={handleLogout}
               />
           </div>
         </div>
