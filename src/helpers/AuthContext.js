@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { axiosPrivate } from '../api/axios';
+import { axiosPrivate } from '../api/axios'
+import axios from '../api/axios'
 
 export const AuthContext = createContext();
 
@@ -26,8 +27,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const checkLoginStatus = async () => {
+      try {
+          const response = await axios.get('/api/auth/status', {
+              withCredentials: true,
+          });
+
+          if (response.data.authenticated) {
+              setAuth({ isAuthenticated: true, userId: response.data.userId, token: response.data.accessToken });
+          } else {
+            setAuth({ isAuthenticated: false, userId: "hello dolbaeb", token: null });
+          }
+      } catch (error) {
+          console.error('Error checking authentication status:', error);
+      }
+  };
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth, login, logout }}>
+    <AuthContext.Provider value={{ auth, setAuth, login, logout, checkLoginStatus }}>
       {children}
     </AuthContext.Provider>
   );

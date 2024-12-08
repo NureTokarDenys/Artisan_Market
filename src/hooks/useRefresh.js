@@ -10,8 +10,8 @@ const useRefreshToken = () => {
         const response = await axios.post("/api/auth/refresh", {}, {
             withCredentials: true
         });
+        newAccessToken = response.data.accessToken;
         setAuth(prev => {
-            newAccessToken = response.data.accessToken;
             return {...prev, accessToken: newAccessToken};
         });
         return newAccessToken;

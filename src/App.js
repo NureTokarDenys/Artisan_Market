@@ -20,7 +20,7 @@ function App() {
   const languageDir = [{name: "en"}, {name: "ua"}];
   const currencyDir = [{name: "Dollar", symbol: "$", multiply: 1}, {name: "Euro", symbol: "€", multiply: 1.1},{name: "Hryvnia", symbol: "₴", multiply: "40"}];
 
-  const { auth, setAuth } = useAuth();
+  const { checkLoginStatus } = useAuth();
 
   const [loading, setLoading] = useState(true);
 
@@ -39,31 +39,7 @@ function App() {
     isSet: false
   });
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      console.log("Checking status");
-        try {
-            const response = await axios.get('/api/auth/status', {
-                withCredentials: true,
-            });
-
-            console.log("status:" + response.data.authenticated);
-            if (response.data.authenticated) {
-                setAuth({ isAuthenticated: true, userId: response.data.userId, token: response.data.accessToken });
-            } else {
-              setAuth({ isAuthenticated: false, userId: "hello dolbaeb", token: null });
-            }
-        } catch (error) {
-            console.error('Error checking authentication status:', error);
-        }finally {
-          setLoading(false);
-        }
-    };
-
-    checkLoginStatus();
-  }, []);
-
-  // Load products
+  // Loading
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -85,7 +61,9 @@ function App() {
     };
   
     getProducts();
-  
+    checkLoginStatus();
+    setLoading(false);
+
     return () => {
       isMounted = false;
       controller.abort();

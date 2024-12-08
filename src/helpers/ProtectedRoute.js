@@ -1,29 +1,37 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { POPUP_TYPES } from './PopUpProvider';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import usePopup from '../hooks/usePopup';
+import { Loader } from '../components/Loader';
 
 const ProtectedRoute = ({ children }) => {
+  const { auth, checkLoginStatus } = useAuth();
   const { openPopup } = usePopup();
-  const { auth } = useAuth(); 
   const location = useLocation();
 
-  useEffect(() => {
-    if (!auth.isAuthenticated) {  
-      const previousPath = location.state?.from || '/products';
-      sessionStorage.setItem('intendedPath', location.pathname);
-      sessionStorage.setItem('previousPath', previousPath);
-      openPopup(POPUP_TYPES.LOGIN);
-    }
-  }, [auth.isAuthenticated, openPopup, location]);
+  const [loading, setLoading] = useState(true); 
 
-  if (!auth.isAuthenticated) {  
-    const previousPath = sessionStorage.getItem('previousPath') || '/products';
-    return <Navigate to={previousPath} replace />;
+  useEffect(() => {
+    const verifyAuth = async () => {
+      await checkLoginStatus(); 
+      setLoading(false); 
+    };
+    verifyAuth();
+  }, []);
+
+  if (loading) {
+    return <Loader size="lg" color="blue" text="Checking authentication..." />;
   }
 
-  return children;
+  if (!auth.isAuthenticated) {
+    // Redirect to login popup or default route if unauthenticated
+    sessionStorage.setItem('intendedPath', location.pathname); // Save the intended path
+    openPopup(POPUP_TYPES.LOGIN);
+    return <Navigate to="/products" replace />;
+  }
+
+  return children; // Render the protected content if authenticated
 };
 
 export default ProtectedRoute;

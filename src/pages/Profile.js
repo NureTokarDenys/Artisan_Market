@@ -9,6 +9,7 @@ import { Image } from 'semantic-ui-react';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import axios from '../api/axios';
+import { Loader } from '../components/Loader';
 
 const Profile = ({ profile, setProfile, currencies, languages }) => {
   const { auth, logout } = useAuth();
@@ -18,6 +19,8 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
   const [profileError, setProfileError] = useState("");
 
   const [imageFile, setImageFile] = useState("");
+
+  const [loading, setLoading] = useState(!profile.isSet);
 
   // Error States
   const [errors, setErrors] = useState({
@@ -215,17 +218,15 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     setProfileError("");
     setProfileMessage("");
     
-    console.log("!profile: " + !profile.isSet + ", auth.token: " + (auth?.token ? "true" : "false") + ", auth: " + JSON.stringify(auth));
-    
     if (!profile.isSet && auth?.token) {
       getProfile("", controller.signal, isMounted);
     }
-  
+
     return () => {
       isMounted = false; 
       controller.abort();
     };
-  }, [profile.isSet, auth?.token]);
+  }, [profile.isSet]);
   
   const getProfile = async (message = "", signal = new AbortController().signal, isMounted = true) => {
     try {
@@ -233,6 +234,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
       if (isMounted) {
         setProfile(response.data);
         setProfileMessage(message);
+        setLoading(false); 
       }
     } catch (err) {
       if(!err?.code === "ERR_CANCELED"){
@@ -259,6 +261,10 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
       profileImage: "", 
       isSet: false
     });
+  }
+
+  if (loading) {
+    return <Loader size='lg' color='blue' text="Loading..." />;
   }
 
   return (

@@ -47,7 +47,7 @@ export const useAxiosPrivate = () => {
                         
                         // Get new access token
                         const newAccessToken = await refresh();
-
+                        
                         // Update the Authorization header of the failed request
                         prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
                         
