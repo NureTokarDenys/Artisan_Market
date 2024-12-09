@@ -1,0 +1,82 @@
+.mobile-header-bars {
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: flex-start;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .side-menu {
+    width: 70%;
+    max-width: 500px;
+    height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+  
+  .side-menu.open {
+    transform: translateX(0);
+  }
+  
+  .close-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    align-self: flex-end;
+  }
+  
+  .text-Logo {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .link-List {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .link-List li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+  }
+  
+  .link-List li a:hover {
+    color: #007BFF;
+  }
+  
+  body.menu-open {
+    overflow: hidden;
+  }

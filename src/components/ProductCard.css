@@ -1,51 +1,74 @@
 .product-card {
-    border: 3px solid #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-    width: 300px;
-    height: 400px;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 300px;
+  height: 400px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
-  .product-link {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  
-  .product-image {
-    width: 300px;
-    height: 300px;
-    object-fit: cover; 
-  }
-  
-  .product-info {
-    width: 100%;
-    padding: 10px;
-    background-color: #fff;
-    text-align: center;
-  }
-  
-  .product-name {
-    font-size: 1.2rem;
-    margin: 8px 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .product-price {
-    margin-left: 5px;
-    font-size: 1rem;
-    color: #4caf50;
-    font-weight: bold;
-  }
-  
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.product-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover; 
+}
+
+.product-info {
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.product-name {
+  font-size: 1.2rem;
+  margin: 8px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  margin-left: 5px;
+  font-size: 1rem;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.wishlist-icon {
+  color: black;
+  position: absolute; 
+  top: 10px; 
+  right: 10px; 
+  cursor: pointer;
+  z-index: 10;
+}
+
+.heart-icon {
+  font-size: 1.8rem;
+  color: #ff0000; 
+  transition: color 0.3s, transform 0.2s;
+}
+
+.heart-icon.filled {
+  color: #ff4d4d;
+}
+
+.heart-icon:hover {
+  transform: scale(1.2); 
+}

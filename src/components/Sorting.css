@@ -1,0 +1,21 @@
+.sort-component {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .main-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .additional-text {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 16px;
+  }

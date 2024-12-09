@@ -2,7 +2,8 @@
     width: 100%;
     height: 10vh;
     background-color: #efefef;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #4b4b4b;
@@ -10,28 +11,29 @@
 
 .textLogo {
     font-size: xx-large;
-    flex-grow: 1;
-    width: 33%;
+    max-width: fit-content;
     margin-left: 10px;
+    color: #000000;
+    text-decoration: none;
 }
 
 .linkList {
-    display: flex;
-    flex-direction: row;
+    justify-self: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
     justify-content: space-between;
     align-items: center;
-    flex-grow: 1;
-    width: 33%;
     list-style-type: none;
+    width: 100%;
 }
 
 .linkList li, .linkList li a {
-    padding: 5px;
+    justify-self: center;
+    width: fit-content;
 }
 
 .linkList li:hover, .linkList li:focus {
     cursor: pointer;
-
 }
 
 .linkList li:hover a {
@@ -42,17 +44,37 @@
 .linkList li a, .search_profile a {
     color: #000000;
     text-decoration: none;
+    width: fit-content;
 }
 
 .search_profile {
-    flex-grow: 1;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    width: 33%;
+    justify-self: right;
 }
 
 .search_profile * {
     margin: 10px;
 }
+.search_profile a {
+    font-size: 1.3rem;
+}
+
+.mobile-header-bars {
+    display: none;
+    justify-self: left;
+}
+
+@media (max-width: 765px) {
+    .textLogo, .linkList {
+        display: none;
+    }
+    .mobile-header-bars {
+        display: block;
+    }
+    .Header {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+  }

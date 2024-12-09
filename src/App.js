@@ -7,6 +7,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import Cart from './pages/Cart';
+import Wishlist from './pages/Wishlist';
 import NotFound from './pages/NotFound';
 import useAuth from './hooks/useAuth';
 import ProtectedRoute from './helpers/ProtectedRoute';
@@ -38,6 +39,29 @@ function App() {
     profileImage: "", 
     isSet: false
   });
+
+  const sortOptions = [
+    {
+      name: "By relevancy",
+      index: 0
+    },
+    {
+      name: "By popularity", 
+      index: 1
+    },
+    {
+      name: "Highest price",
+      index: 2
+    },
+    {
+      name: "Lowest price",
+      index: 3
+    }
+  ];
+  const [sort, setSort] = useState(0);
+
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
   // Loading
   const [products, setProducts] = useState([]);
@@ -80,7 +104,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/products" replace />} />
           
-          <Route path="/products" element={<Shop products={products} />} />
+          <Route path="/products" element={<Shop products={products} sortOptions={sortOptions} sort={sort} setSort={setSort} wishlist={wishlist} setWishlist={setWishlist} />} />
           <Route path="/products/:id" element={<Product products={products} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
@@ -104,6 +128,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Cart />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist wishlist={wishlist} setWishlist={setWishlist} sortOptions={sortOptions} />
               </ProtectedRoute>
             }
           />

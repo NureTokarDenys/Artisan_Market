@@ -1,6 +1,6 @@
 import './ProfileSelect.css';
 
-const ProfileSelect = ({ title, array, state, setState }) => {
+const ProfileSelect = ({ title = "", array, state, setState }) => {
   const handleChange = (event) => {
     setState(event.target.value); 
   };

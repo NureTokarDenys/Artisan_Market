@@ -1,0 +1,19 @@
+.empty-wishlist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.empty-header {
+    margin: 10px;
+}
+
+.empty-link {
+    text-decoration: none;
+}
+
+.empty-link-text {
+    text-decoration: none;
+    color: #33a828;
+}
