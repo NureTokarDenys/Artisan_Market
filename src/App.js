@@ -15,31 +15,21 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Loader } from './components/Loader';
+import useAxiosPrivate from './hooks/useAxiosPrivate';
+
+const debounce = (func, delay) => {
+  let timeout;
+  return (...args) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
+};
 
 function App() {
+  const axiosPrivate = useAxiosPrivate();
   // Temp
   const languageDir = [{name: "en"}, {name: "ua"}];
   const currencyDir = [{name: "Dollar", symbol: "$", multiply: 1}, {name: "Euro", symbol: "€", multiply: 1.1},{name: "Hryvnia", symbol: "₴", multiply: "40"}];
-
-  const { checkLoginStatus } = useAuth();
-
-  const [loading, setLoading] = useState(true);
-
-  const [profile, setProfile] = useState({
-    bio: "",
-    location: "",
-    phone: "",
-    email: "",
-    currency: "",
-    language: "",
-    cardNumber: "",
-    cardDate: "",
-    cardCVV: "",
-    cardName: "",
-    profileImage: "", 
-    isSet: false
-  });
-
   const sortOptions = [
     {
       name: "By relevancy",
@@ -58,6 +48,26 @@ function App() {
       index: 3
     }
   ];
+
+  const { auth, setAuth } = useAuth();
+
+  const [loading, setLoading] = useState(true);
+
+  const [profile, setProfile] = useState({
+    bio: "",
+    location: "",
+    phone: "",
+    email: "",
+    currency: "",
+    language: "",
+    cardNumber: "",
+    cardDate: "",
+    cardCVV: "",
+    cardName: "",
+    profileImage: "", 
+    isSet: false
+  });
+
   const [sort, setSort] = useState(0);
 
   const [cart, setCart] = useState([]);
@@ -70,29 +80,83 @@ function App() {
     let isMounted = true;
     const controller = new AbortController();
   
-    const getProducts = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('/api/products', {
-          signal: controller.signal
-        });
-
-        if (isMounted) setProducts(response.data);
-      } catch (error) {
-        if(!error?.code === "ERR_CANCELED"){
-          console.error('Error fetching products:', error);
+        const authResponse = await axios.get('/api/auth/status', { withCredentials: true });
+        if (authResponse.data.authenticated) {
+          setAuth({
+            isAuthenticated: true,
+            userId: authResponse.data.userId,
+            token: authResponse.data.accessToken,
+          });
+        } else {
+          setAuth({ isAuthenticated: false, userId: null, token: null });
         }
+  
+        const productsResponse = await axios.get('/api/products', { signal: controller.signal });
+        if (isMounted) setProducts(productsResponse.data);
+  
+        if (authResponse.data.authenticated) {
+          const cartResponse = await axiosPrivate.get(`/api/cart/${authResponse.data.userId}`, {
+            signal: controller.signal,
+          });
+          if (isMounted) setCart(cartResponse.data.cart || []);
+  
+          const wishlistResponse = await axiosPrivate.get(`/api/wishlist/${authResponse.data.userId}`, {
+            signal: controller.signal,
+          });
+          if (isMounted) setWishlist(wishlistResponse.data.wishlist || []);
+        }
+      } catch (error) {
+        if (error.code !== 'ERR_CANCELED') {
+          console.error('Error fetching data:', error);
+        }
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
   
-    getProducts();
-    checkLoginStatus();
-    setLoading(false);
-
+    fetchData();
+  
     return () => {
       isMounted = false;
       controller.abort();
     };
   }, []);
+  
+
+  const saveCartToBackend = async (updatedCart) => {
+    try {
+      await axiosPrivate.post('/api/cart/' + auth.userId, { cart: updatedCart });
+      console.log('Cart saved successfully');
+    } catch (error) {
+      console.error('Failed to save cart:', error.message);
+    }
+  };
+
+  const saveWishlistToBackend = async (updatedWishlist) => {
+    try {
+      await axiosPrivate.post('/api/wishlist/' + auth.userId , { wishlist: updatedWishlist });
+      console.log('Wishlist saved successfully');
+    } catch (error) {
+      console.error('Failed to save wishlist:', error.message);
+    }
+  };
+
+  const debouncedSaveCart = debounce(saveCartToBackend, 3000);
+  const debouncedSaveWishlist = debounce(saveWishlistToBackend, 3000);
+
+  useEffect(() => {
+    if (auth?.userId) {
+      debouncedSaveCart(cart);
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    if (auth?.userId) {
+      debouncedSaveWishlist(wishlist);
+    }
+  }, [wishlist]);
 
   if (loading) {
     return <Loader size='lg' color='green' text="Loading..." />;
