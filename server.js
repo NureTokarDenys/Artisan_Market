@@ -35,3 +35,6 @@ app.use('/api/profile', profileRoutes);
 
 const s3Routes = require('./src/routes/s3Routes');
 app.use('/api/s3', s3Routes);
+
+const cartWishlistRoutes = require('./src/routes/cartWishlistRoutes');
+app.use('/api', cartWishlistRoutes);
