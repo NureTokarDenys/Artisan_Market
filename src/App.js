@@ -105,7 +105,7 @@ function App() {
           <Route path="/" element={<Navigate to="/products" replace />} />
           
           <Route path="/products" element={<Shop products={products} sortOptions={sortOptions} sort={sort} setSort={setSort} wishlist={wishlist} setWishlist={setWishlist} />} />
-          <Route path="/products/:id" element={<Product products={products} />} />
+          <Route path="/products/:id" element={<Product products={products} cart={cart} setCart={setCart} wishlist={wishlist} setWishlist={setWishlist} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
 
@@ -127,7 +127,7 @@ function App() {
             path="/cart"
             element={
               <ProtectedRoute>
-                <Cart />
+                <Cart cart={cart} setCart={setCart} />
               </ProtectedRoute>
             }
           />

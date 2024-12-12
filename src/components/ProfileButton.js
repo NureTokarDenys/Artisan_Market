@@ -2,6 +2,7 @@ import './ProfileButton.css';
 import { useState } from "react";
 
 const ProfileButton = ({ 
+  className = "ProfileBtn",
   title = "Button", 
   textColor = "#000",
   bgColor = "#efefef", 
@@ -16,7 +17,7 @@ const ProfileButton = ({
         backgroundColor: isHovered ? hoverColor : bgColor,
         color: textColor
       }}
-      className="ProfileBtn"
+      className={className}
       onClick={action}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
