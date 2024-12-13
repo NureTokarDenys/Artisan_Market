@@ -3,10 +3,12 @@ import { useState } from "react";
 
 const ProfileButton = ({ 
   className = "ProfileBtn",
-  title = "Button", 
+  title = "Button",
+  border = "none", 
   textColor = "#000",
   bgColor = "#efefef", 
-  hoverColor = "#d3d3d3", 
+  hoverColor = "#d3d3d3",
+  hoverTextColor = textColor,
   action 
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -15,7 +17,8 @@ const ProfileButton = ({
     <button
       style={{
         backgroundColor: isHovered ? hoverColor : bgColor,
-        color: textColor
+        color: isHovered ? hoverTextColor : textColor,
+        border: border
       }}
       className={className}
       onClick={action}

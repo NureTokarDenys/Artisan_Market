@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaRegCircleUser, FaCartShopping, FaRegHeart } from "react-icons/fa6";
+import { FaRegCircleUser, FaCartShopping, FaRegHeart, FaSuitcase } from "react-icons/fa6";
 import SearchBar from './SearchBar';
 import MobileHeaderBars from './MobileHeaderBars';
 import './Header.css';
@@ -17,9 +17,10 @@ const Header = () => {
         <MobileHeaderBars className="mobile-header-bars" />
         <div className="search_profile">
             <Link to="/"> <SearchBar /> </Link> {/* TODO*/}
+            <Link to="/catalog"> <FaSuitcase /> </Link>
             <Link to="/wishlist"> <FaRegHeart /> </Link> 
             <Link to="/profile"> <FaRegCircleUser /> </Link>
-            <Link to="/cart"> <FaCartShopping /> </Link>  {/* TODO*/}
+            <Link to="/cart"> <FaCartShopping /> </Link>
         </div>
     </header>
   )

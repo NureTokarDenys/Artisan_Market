@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Loader } from './components/Loader';
 import useAxiosPrivate from './hooks/useAxiosPrivate';
+import Catalog from './pages/Catalog';
 
 const debounce = (func, delay) => {
   let timeout;
@@ -200,6 +201,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Wishlist wishlist={wishlist} setWishlist={setWishlist} sortOptions={sortOptions} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/catalog"
+            element={
+              <ProtectedRoute>
+                <Catalog catalog={products} sortOptions={sortOptions} sort={sort} setSort={setSort} />
               </ProtectedRoute>
             }
           />

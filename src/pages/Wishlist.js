@@ -18,9 +18,9 @@ const Wishlist = ({ wishlist, setWishlist, sortOptions }) => {
   }
 
   return (
-    <main className="shop">
+    <main className="wishlist">
       <Sorting h1={"Your Wishlist"} h2={"Save your favorite items to purchase later."} sortOptions={sortOptions} sort={sort} setSort={setSort} />
-      <div className="product-list">
+      <div className="wishlist-product-list">
         {wishlist.map((product) => (
           <ProductCard key={product._id} product={product} wishlist={wishlist} setWishlist={setWishlist} />
         ))}
