@@ -51,5 +51,27 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    justify-content: center;
+    padding: 0 10px;
+}
+
+.seller-product-status {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.active, .hidden, .deleted {
+    font-size: 1rem;
+}
+
+.active {
+    color: #34C759;
+}
+
+.hidden {
+    color: #8E8E93;
+}
+
+.deleted {
+    color: #FF3B30;
 }

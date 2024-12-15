@@ -17,6 +17,7 @@ import axios from 'axios';
 import { Loader } from './components/Loader';
 import useAxiosPrivate from './hooks/useAxiosPrivate';
 import Catalog from './pages/Catalog';
+import SellerAddAndEditPage from './pages/SellerAddAndEditPage';
 
 const debounce = (func, delay) => {
   let timeout;
@@ -205,11 +206,28 @@ function App() {
             }
           />
 
+
           <Route
             path="/catalog"
             element={
               <ProtectedRoute>
                 <Catalog catalog={products} sortOptions={sortOptions} sort={sort} setSort={setSort} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/catalog/edit/:id"
+            element={
+              <ProtectedRoute>
+                <SellerAddAndEditPage title='Edit Your Product' edit={true} products={products} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/catalog/add"
+            element={
+              <ProtectedRoute>
+                <SellerAddAndEditPage title='Add New Product' />
               </ProtectedRoute>
             }
           />

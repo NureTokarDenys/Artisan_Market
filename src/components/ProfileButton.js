@@ -9,6 +9,7 @@ const ProfileButton = ({
   bgColor = "#efefef", 
   hoverColor = "#d3d3d3",
   hoverTextColor = textColor,
+  icon,
   action 
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -25,6 +26,7 @@ const ProfileButton = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {icon}
       {title}
     </button>
   );

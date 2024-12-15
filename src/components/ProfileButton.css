@@ -1,6 +1,9 @@
 .ProfileBtn {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
     padding: 10px 25px;
     border-radius: 5px;
-    cursor: "pointer";
+    cursor: pointer;
     transition: background-color 0.2s ease;
 }

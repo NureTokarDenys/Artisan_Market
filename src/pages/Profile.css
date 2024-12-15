@@ -65,7 +65,7 @@
     aspect-ratio: 1 / 1; 
     width: 100%; 
     max-width: 180px; 
-    background-color: #cadff1;
+    background-color: #e5f2ff;
 }
 
 .avatar {
@@ -94,7 +94,9 @@
     width: 100%; 
     resize: none;
     border-radius: 5px;
+    padding: 5px;
     background-color: #e5f2ff;
+    border: 2px solid black;
 }
 
 .additionalInfo {

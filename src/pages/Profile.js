@@ -34,18 +34,9 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     cardNameError: "",
   });
 
-  // Handle Changes for all fields
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: value
-    }));
-  };
-
   // Validation Functions
   const validateLocation = (location) => {
-    if (!location) return "Location is empty.";
+    if (!location) return "";
     if (Number(location)) return "Location cannot be a number.";
     let splittedLoc = location.split(", ");
     if (splittedLoc.length !== 2) return "Invalid location format. Please follow: City, Country.";
@@ -53,14 +44,14 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
   };
 
   const validateEmail = (email) => {
-    if (!email) return "Email is empty.";
+    if (!email) return "";
     if (Number(email)) return "Email cannot be a number.";
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) return "Email has a wrong format.";
   };
 
   const validatePhone = (phone) => {
-    if (!phone) return "Phone is empty.";
+    if (!phone) return "";
     const phoneRegex = /^[+]?[\d\s()-]+$/;
     if (!phoneRegex.test(phone)) return "Phone is invalid.";
     if (phone.length < 8) return "Phone is too short.";
@@ -131,19 +122,22 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
   const updateProfile = async (e) => {
     e.preventDefault();
     try { 
-    const imageURL = await postImage(imageFile);
+      let imageURL = profile.profileImage;
+      if(imageFile != ""){
+        imageURL = await postImage(imageFile);
+      }
 
-    axiosPrivate.post(`/api/profile/update/${auth.userId}`, {
-      profileImage: imageURL, 
-      bio: profile.bio, 
-      location: profile.location, 
-      phone: profile.phone, 
-      email: profile.email,
-      currency: profile.currency, 
-      language: profile.language, 
-      isSet: true
-    });
-    setProfileMessage('Updated successfully');
+      axiosPrivate.post(`/api/profile/update/${auth.userId}`, {
+        profileImage: imageURL, 
+        bio: profile.bio, 
+        location: profile.location, 
+        phone: profile.phone, 
+        email: profile.email,
+        currency: profile.currency, 
+        language: profile.language, 
+        isSet: true
+      });
+      setProfileMessage('Updated successfully');
   }
   catch(err) {
     console.error("Error: " + err);
@@ -168,7 +162,6 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
     e.persist();
     const file = e.target.files[0];
   
-    // Check if a file is selected
     if (!file) return;
 
     setErrors((prevErrors) => ({
@@ -176,13 +169,10 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
       imageError: "",
     }));
   
-    // Define size limit in bytes (e.g., 2MB)
     const maxSize = 2 * 1024 * 1024; // 2MB
   
-    // Allowed extensions
     const allowedExtensions = ["image/png", "image/jpeg"];
   
-    // Validate file type
     if (!allowedExtensions.includes(file.type)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -191,7 +181,6 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
       return;
     }
   
-    // Validate file size
     if (file.size > maxSize) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -200,13 +189,11 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
       return;
     }
   
-    // Generate URL and update profile
     const fileURL = URL.createObjectURL(file);
     if (fileURL) {
       setProfile((prevProfile) => ({ ...prevProfile, profileImage: fileURL }));
     }
   
-    // Save file for further use
     setImageFile(file);
   };
   
@@ -293,7 +280,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
               placeholder='Write your bio here e.g. your hobbies, interests, ETC'
               value={profile.bio}
               name="bio"
-              onChange={handleChange}
+              onChange={(event) => setProfile((prevProfile) => ({ ...prevProfile, bio: event.target.value }))}
             />
           </div>
         </div>
@@ -303,7 +290,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             name={"location"}
             placeholder='For example: Paris, France'
             inputState={profile.location}
-            inputSetState={handleChange}
+            inputSetState={(value) => setProfile((prevProfile) => ({ ...prevProfile, location: value }))}
             errorState={errors.locationError}
             setErrorState={(error) => setErrors((prev) => ({ ...prev, locationError: error }))}
             validate={validateLocation}
@@ -312,7 +299,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             title={"Email"}
             name='email'
             inputState={profile.email}
-            inputSetState={handleChange}
+            inputSetState={(value) => setProfile((prevProfile) => ({ ...prevProfile, email: value }))}
             errorState={errors.emailError}
             setErrorState={(error) => setErrors((prev) => ({ ...prev, emailError: error }))}
             validate={validateEmail}
@@ -321,7 +308,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             title={"Phone number"}
             name='phone'
             inputState={profile.phone}
-            inputSetState={handleChange}
+            inputSetState={(value) => setProfile((prevProfile) => ({ ...prevProfile, phone: value }))}
             errorState={errors.phoneError}
             setErrorState={(error) => setErrors((prev) => ({ ...prev, phoneError: error }))}
             validate={validatePhone}
@@ -346,7 +333,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             title={"Card information"}
             placeholder={"0000 0000 0000 0000"}
             inputState={profile.cardNumber}
-            inputSetState={handleChange}
+            inputSetState={(value) => setProfile((prevProfile) => ({ ...prevProfile, cardNumber: value }))}
             errorState={errors.cardNumberError}
             setErrorState={(error) => setErrors((prev) => ({ ...prev, cardNumberError: error }))}
             validate={validateCardNumber}
@@ -355,7 +342,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             <ProfileInput
               placeholder={"MM/YY"}
               inputState={profile.cardDate}
-              inputSetState={handleChange}
+              inputSetState={(value) => setProfile((prevProfile) => ({ ...prevProfile, cardDate: value }))}
               errorState={errors.cardDateError}
               setErrorState={(error) => setErrors((prev) => ({ ...prev, cardDateError: error }))}
               validate={validateCardDate}
@@ -363,7 +350,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             <ProfileInput
               placeholder={"CVV"}
               inputState={profile.cardCVV}
-              inputSetState={handleChange}
+              inputSetState={(value) => setProfile((prevProfile) => ({ ...prevProfile, cardCVV: value }))}
               errorState={errors.cardCVVError}
               setErrorState={(error) => setErrors((prev) => ({ ...prev, cardCVVError: error }))}
               validate={validateCardCVV}
@@ -373,7 +360,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
             title={"Name on card"}
             placeholder={"Name"}
             inputState={profile.cardName}
-            inputSetState={handleChange}
+            inputSetState={(value) => setProfile((prevProfile) => ({ ...prevProfile, cardName: value }))}
             errorState={errors.cardNameError}
             setErrorState={(error) => setErrors((prev) => ({ ...prev, cardNameError: error }))}
             validate={validateCardName}
@@ -385,7 +372,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
               <ProfileButton
                 title={"Update profile"}
                 bgColor={"#84a98c"}
-                hoverColor={"#3acf46"}
+                hoverColor={"#0cad19"}
                 action={updateProfile}
               />
               <ProfileButton
