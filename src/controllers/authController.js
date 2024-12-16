@@ -9,7 +9,6 @@ const generateAccessToken = (user) => {
   return jwt.sign(
     { 
       id: user._id,
-      email: user.email,
       role: user.role 
     },
     process.env.JWT_SECRET || 'default_secret',
@@ -19,7 +18,10 @@ const generateAccessToken = (user) => {
 
 const generateRefreshToken = (user) => {
   return jwt.sign(
-    { id: user._id },
+    { 
+      id: user._id,
+      role: user.role 
+    },
     process.env.JWT_REFRESH_SECRET || 'default_refresh_secret',
     { expiresIn: '7d' }
   );
@@ -170,7 +172,8 @@ exports.loginUser = async (req, res) => {
     res.status(200).json({
       message: 'Login successful',
       accessToken,
-      userId: user._id
+      userId: user._id,
+      role: user.role
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -189,7 +192,6 @@ exports.refreshUser = async (req, res) => {
     const storedToken = await db.collection('Refresh_tokens').findOne({ refreshToken });
 
     if (!storedToken) {
-      res.clearCookie('refreshToken', cookieOptions);
       return res.status(405).json({ message: 'Invalid refresh token' });
     }
 
@@ -203,25 +205,15 @@ exports.refreshUser = async (req, res) => {
         }
       );
     });
-    console.log("decoded = " + decoded);
+   
     const user = await db.collection('Users').findOne({ _id: new ObjectId(decoded.id) });
-    console.log("user = " + user);
+    
     if (!user) {
       res.clearCookie('refreshToken', cookieOptions);
       return res.status(403).json({ message: 'User not found' });
     }
 
     const newAccessToken = generateAccessToken(user);
-    const newRefreshToken = generateRefreshToken(user);
-
-    await db.collection('Refresh_tokens').deleteOne({ refreshToken });
-    await db.collection('Refresh_tokens').insertOne({
-      refreshToken: newRefreshToken,
-      userId: user._id,
-    });
-
-    res.cookie('refreshToken', newRefreshToken, cookieOptions);
-    console.log("Set new refresh token cookie: " + newRefreshToken);
 
     res.json({ accessToken: newAccessToken });
   } catch (error) {
@@ -250,14 +242,21 @@ exports.logoutUser = async (req, res) => {
 exports.getUserStatus = async (req, res) => {
   const refreshToken = req.cookies?.refreshToken;
   if (!refreshToken) {
-      return res.json({ authenticated: false });
+    return res.json({ authenticated: false });
   }
 
   try {
-      const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-      const newAccessToken = generateAccessToken(user);
-      res.status(200).json({ authenticated: true, userId: user.id, accessToken: newAccessToken });
+    const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    const newAccessToken = generateAccessToken(user);
+
+    res.status(200).json({
+      authenticated: true,
+      userId: user.id,
+      accessToken: newAccessToken,
+      role: user.role,
+    });
   } catch (err) {
-      res.status(401).json({ authenticated: false });
+    res.status(401).json({ authenticated: false });
   }
 };
