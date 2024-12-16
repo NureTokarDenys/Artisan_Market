@@ -50,9 +50,9 @@ const LoginPopUp = () => {
         withCredentials: true
       });
 
-      const { userId, accessToken } = response.data;
-
-      login(userId, accessToken);
+      const { userId, accessToken, role } = response.data;
+      console.log(role)
+      login(userId, accessToken, role);
       
       handleLoginSuccess();
 

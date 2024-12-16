@@ -2,7 +2,7 @@ import SellerProductCard from '../components/SellerProductCard';
 import Sorting from '../components/Sorting';
 import './Catalog.css';
 
-const Catalog = ({ catalog, sortOptions, sort, setSort }) => {
+const Catalog = ({ catalog, sortOptions, sort, setSort, setProducts }) => {
    const isEmpty = (catalog?.length || 0) === 0;
     if(isEmpty){
       return (
@@ -18,7 +18,7 @@ const Catalog = ({ catalog, sortOptions, sort, setSort }) => {
       <Sorting h1={"Your catalog"} h2={"Manage your products efficiently"} sortOptions={sortOptions} sort={sort} setSort={setSort} />
       <div className='catalog-product-list'>
         {catalog.map((product) => (
-            <SellerProductCard key={product._id} product={product} />
+            <SellerProductCard key={product._id} product={product} setProducts={setProducts} />
           ))}
       </div>
     </main>

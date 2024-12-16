@@ -56,7 +56,7 @@ export const useAxiosPrivate = () => {
                         setIsRefreshing(false); // Reset the refreshing flag
                         return response;
                     } catch (refreshError) {
-                        setAuth({ isAuthenticated: false, userId: null });
+                        setAuth({ isAuthenticated: false, role: null, userId: null });
                         setIsRefreshing(false); // Reset the refreshing flag even if the refresh fails
                         return Promise.reject(refreshError); // Reject the error if refresh fails
                     }
@@ -64,7 +64,7 @@ export const useAxiosPrivate = () => {
 
                 // Handle unauthorized (401) errors (clear auth)
                 if (error?.response?.status === 401) {
-                    setAuth({ isAuthenticated: false, userId: null });
+                    setAuth({ isAuthenticated: false, role: null, userId: null });
                 }
 
                 return Promise.reject(error);

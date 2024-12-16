@@ -5,11 +5,15 @@ import { useAuth } from '../hooks/useAuth';
 import usePopup from '../hooks/usePopup';
 import { Loader } from '../components/Loader';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const { openPopup } = usePopup();
-  const { auth, checkLoginStatus } = useAuth(); 
+  const { auth, checkLoginStatus } = useAuth();
   const location = useLocation();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  if (loading) {
+    return <Loader size="lg" color="red" text="Loading..." />;
+  }
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -39,8 +43,14 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to={previousPath} replace />;
   }
 
-  if (loading) {
-    return <Loader size='lg' color='red' text="Loading..." />;
+  if (auth?.isAuthenticated && !allowedRoles.includes(auth?.role)) {
+    return (
+      <Navigate
+        to="/unauthorized"
+        replace
+        state={{ currentRole: auth.role, requiredRoles: allowedRoles }}
+      />
+    );
   }
 
   return children;

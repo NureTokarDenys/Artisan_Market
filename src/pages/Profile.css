@@ -164,11 +164,18 @@
     border: none;
 }
 
+.messages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .message {
     margin-bottom: 10px;
     text-align: 'center';
     font-size: 17px;
-    width: 50%;
+    width: 180px;
+    height: fit-content;
 }
 .error {
     color: red;

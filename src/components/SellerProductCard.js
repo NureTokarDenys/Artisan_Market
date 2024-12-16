@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 import './SellerProductCard.css';
 import ProfileButton from './ProfileButton';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
-const SellerProductCard = ({ product }) => {
+const SellerProductCard = ({ product, setProducts }) => {
+    const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const imagesLength = product.images.length;
     const [activeImage, setActiveImage] = useState(0);
@@ -28,35 +30,77 @@ const SellerProductCard = ({ product }) => {
         }
     }
 
-    const handleAdd = () => {
-        navigate(`/catalog/add`);
-    }
-
     const handleEdit = () => {
         navigate(`/catalog/edit/${product._id}`);
     }
 
-    const handleShow = () => {
+    const handleShow = async () => {
         product.status = "Active";
         setActiveState(product.status);
+        const response = await axiosPrivate.post(`/api/products/status/${product._id}`, { status: product.status });
+        setProducts((prevProducts) => {
+            return prevProducts.map((item) => {
+              if (item._id === product._id) {
+                return {
+                  ...item,
+                  status: "Active",
+                };
+              }
+              return item;
+            });
+        });
     }
 
-    const handleHide = () => {
+    const handleHide = async () => {
         product.status = "Hidden";
         setActiveState(product.status);
+        const response = await axiosPrivate.post(`/api/products/status/${product._id}`, { status: product.status });
+        setProducts((prevProducts) => {
+            return prevProducts.map((item) => {
+              if (item._id === product._id) {
+                return {
+                  ...item,
+                  status: "Hidden",
+                };
+              }
+              return item;
+            });
+        })
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         product.status = "Deleted";
         setActiveState(product.status);
+        const response = await axiosPrivate.post(`/api/products/status/${product._id}`, { status: product.status });
+        setProducts((prevProducts) => {
+            return prevProducts.map((item) => {
+              if (item._id === product._id) {
+                return {
+                  ...item,
+                  status: "Deleted",
+                };
+              }
+              return item;
+            });
+        })
     }
 
-    const handleRepublish = () => {
+    const handleRepublish = async () => {
         product.status = "Active";
         setActiveState(product.status);
+        const response = await axiosPrivate.post(`/api/products/status/${product._id}`, { status: product.status });
+        setProducts((prevProducts) => {
+            return prevProducts.map((item) => {
+              if (item._id === product._id) {
+                return {
+                  ...item,
+                  status: "Active",
+                };
+              }
+              return item;
+            });
+        })
     }
-
-    product.status = "Active";
 
   return (
     <div className="seller-product-card">
@@ -69,7 +113,7 @@ const SellerProductCard = ({ product }) => {
           <h2 className="seller-product-name">Product: {product.name}</h2>
           <h2 className="seller-product-price">Price: ${product.price.toFixed(2)}</h2>
           <h2 className="seller-product-stock">Stock: {product.quantity} pcs</h2> 
-          <h2 className="seller-product-status"><p>Status:</p><p className={activeState?.toLowerCase()}>{activeState}</p><ProfileButton title='Add' action={handleAdd} /></h2>
+          <h2 className="seller-product-status"><p>Status:</p><p className={activeState?.toLowerCase()}>{activeState}</p></h2>
         </div>
         <div className='seller-product-actions' style={{ justifyContent: activeState === "Deleted" ? "space-between" : "center" }}>
             {activeState === "Deleted" && 

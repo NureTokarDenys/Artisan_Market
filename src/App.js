@@ -18,6 +18,7 @@ import { Loader } from './components/Loader';
 import useAxiosPrivate from './hooks/useAxiosPrivate';
 import Catalog from './pages/Catalog';
 import SellerAddAndEditPage from './pages/SellerAddAndEditPage';
+import UnAuthorized from './pages/UnAuthorized';
 
 const debounce = (func, delay) => {
   let timeout;
@@ -75,6 +76,8 @@ function App() {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
+  const [catalog, setCatalog] = useState([]);
+
   // Loading
   const [products, setProducts] = useState([]);
 
@@ -89,10 +92,11 @@ function App() {
           setAuth({
             isAuthenticated: true,
             userId: authResponse.data.userId,
+            role: authResponse.data.role,
             token: authResponse.data.accessToken,
           });
         } else {
-          setAuth({ isAuthenticated: false, userId: null, token: null });
+          setAuth({ isAuthenticated: false, role: null, userId: null, token: null });
         }
   
         const productsResponse = await axios.get('/api/products', { signal: controller.signal });
@@ -108,6 +112,14 @@ function App() {
             signal: controller.signal,
           });
           if (isMounted) setWishlist(wishlistResponse.data.wishlist || []);
+          
+          if(authResponse.data.role == "seller"){
+            const catalogResponse = await axiosPrivate.get(`/api/products/user/${authResponse.data.userId}`, {
+              signal: controller.signal,
+            });
+           
+            if (isMounted) setCatalog(catalogResponse.data || []);
+          }
         }
       } catch (error) {
         if (error.code !== 'ERR_CANCELED') {
@@ -126,11 +138,14 @@ function App() {
     };
   }, []);
   
+  useEffect(() => {
+    const catal = products.filter((prod) => prod?.userId === auth?.userId);
+    setCatalog(catal);
+  }, [products, auth?.userId]);
 
   const saveCartToBackend = async (updatedCart) => {
     try {
       await axiosPrivate.post('/api/cart/' + auth.userId, { cart: updatedCart });
-      console.log('Cart saved successfully');
     } catch (error) {
       console.error('Failed to save cart:', error.message);
     }
@@ -139,7 +154,6 @@ function App() {
   const saveWishlistToBackend = async (updatedWishlist) => {
     try {
       await axiosPrivate.post('/api/wishlist/' + auth.userId , { wishlist: updatedWishlist });
-      console.log('Wishlist saved successfully');
     } catch (error) {
       console.error('Failed to save wishlist:', error.message);
     }
@@ -179,7 +193,7 @@ function App() {
           <Route
             path="/profile"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
                 <Profile
                   profile={profile}
                   setProfile={setProfile}
@@ -192,7 +206,7 @@ function App() {
           <Route
             path="/cart"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
                 <Cart cart={cart} setCart={setCart} />
               </ProtectedRoute>
             }
@@ -200,7 +214,7 @@ function App() {
           <Route
             path="/wishlist"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
                 <Wishlist wishlist={wishlist} setWishlist={setWishlist} sortOptions={sortOptions} />
               </ProtectedRoute>
             }
@@ -210,28 +224,29 @@ function App() {
           <Route
             path="/catalog"
             element={
-              <ProtectedRoute>
-                <Catalog catalog={products} sortOptions={sortOptions} sort={sort} setSort={setSort} />
+              <ProtectedRoute allowedRoles={['seller']}>
+                <Catalog catalog={catalog} sortOptions={sortOptions} sort={sort} setSort={setSort} setProducts={setProducts} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/catalog/edit/:id"
             element={
-              <ProtectedRoute>
-                <SellerAddAndEditPage title='Edit Your Product' edit={true} products={products} />
+              <ProtectedRoute allowedRoles={['seller']}>
+                <SellerAddAndEditPage title='Edit Your Product' edit={true} products={products} setProducts={setProducts} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/catalog/add"
             element={
-              <ProtectedRoute>
-                <SellerAddAndEditPage title='Add New Product' />
+              <ProtectedRoute allowedRoles={['seller']}>
+                <SellerAddAndEditPage title='Add New Product' products={products} setProducts={setProducts} />
               </ProtectedRoute>
             }
           />
 
+          <Route path="/unauthorized" element={<UnAuthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       <Footer />

@@ -8,8 +8,8 @@ import { useRef, useEffect, useState } from 'react';
 import { Image } from 'semantic-ui-react';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import axios from '../api/axios';
 import { Loader } from '../components/Loader';
+import axios from '../api/axios';
 
 const Profile = ({ profile, setProfile, currencies, languages }) => {
   const { auth, logout } = useAuth();
@@ -107,7 +107,7 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
   };
 
   const postImage = async (file) => {
-    const response = await axios.get("/api/s3/url");
+    const response = await axiosPrivate.get("/api/s3/url");
     const { url } = response.data;
     axios.put(url, file, {
       headers: {
@@ -381,19 +381,19 @@ const Profile = ({ profile, setProfile, currencies, languages }) => {
                 hoverColor={"#d3d3d3"}
                 action={resetProfile}
               />
-              <div className='messages'>
-              {profileMessage && (
-                  <div className="message success">
-                    {profileMessage}
-                  </div>
-              )}
-              {profileError && (
-                  <div className="message error">
-                    {profileError}
-                  </div>
-              )}
-              </div>
             </div>
+              <div className='messages'>
+                {profileMessage && (
+                    <div className="message success">
+                      {profileMessage}
+                    </div>
+                )}
+                {profileError && (
+                    <div className="message error">
+                      {profileError}
+                    </div>
+                )}
+              </div>
           </div>
           <div className='logout'>
             <ProfileButton
