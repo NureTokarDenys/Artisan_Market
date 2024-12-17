@@ -27,9 +27,14 @@ const RegisterPopup = () => {
     setError(null);
   };
 
-  const validateForm = () => {
-    const { email, password, confirmPassword, name, surname } = formData;
+  const validateForm = async () => {
+    const { email, password, confirmPassword, name, surname, role } = formData;
     
+    if(role == 'user'){
+      setError('Please select role');
+      return false;
+    }
+
     if (!email || !password || !confirmPassword || !name || !surname) {
       setError('All fields are required');
       return false;
@@ -51,6 +56,12 @@ const RegisterPopup = () => {
       return false;
     }
 
+    const response = await axios.post("/api/auth/checkemail", { email: email });
+    if(!response.data.availible){
+      setError('Email already exists');
+      return false;
+    }
+
     return true;
   };
 
@@ -59,7 +70,8 @@ const RegisterPopup = () => {
     
     setError(null);
 
-    if (!validateForm()) return;
+    const isValid = await validateForm();
+    if (!isValid) return;
 
     try {
       const response = await axios.post('/api/auth/register', {
