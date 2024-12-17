@@ -1,5 +1,5 @@
 const express = require('express');
-const { addUser, updateUser, deleteUser, loginUser, refreshUser, logoutUser, getUserStatus } = require('../controllers/authController');
+const { addUser, updateUser, deleteUser, loginUser, refreshUser, logoutUser, getUserStatus, isEmailTaken } = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -13,6 +13,8 @@ router.post('/logout', authMiddleware, logoutUser);
 
 router.put('/:id', authMiddleware, updateUser);
 router.delete('/:id', authMiddleware, deleteUser);
+
+router.post("/checkemail", isEmailTaken);
 
 
 

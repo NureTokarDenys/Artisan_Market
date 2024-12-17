@@ -260,3 +260,17 @@ exports.getUserStatus = async (req, res) => {
     res.status(401).json({ authenticated: false });
   }
 };
+
+exports.isEmailTaken = async (req, res) => {
+  const email = req.body.email;
+
+  const db = await connectDB();
+
+  const user = await db.collection("Users").findOne({ email: email });
+
+  if (!user) {
+    return res.status(200).json({ availible: true, message: 'Email is not taken' });
+  }else {
+    return res.status(200).json({ availible: false, message: 'Email is taken' });
+  }
+}
