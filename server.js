@@ -10,13 +10,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Cookies
-app.use(cookieParser());
-
 // CORS
 app.use(cors(corsOptions));
 
-// Middleware 
+// Cookies
+app.use(cookieParser());
+
+// Json middleware
 app.use(express.json());
 
 connectDB().then(() => {
