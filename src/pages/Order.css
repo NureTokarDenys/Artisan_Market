@@ -1,0 +1,15 @@
+.order-navigation {
+    display: flex;
+    gap: 0.5rem;
+    color: #6B7280;
+    margin-bottom: 2rem;
+  }
+  
+  .order-navigation a {
+    color: #6B7280;
+    text-decoration: none;
+  }
+  
+  .order-navigation a:hover {
+    color: #111827;
+  }

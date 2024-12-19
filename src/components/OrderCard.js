@@ -1,8 +1,11 @@
 
+import { useNavigate } from 'react-router-dom';
 import './OrderCard.css';
 import ProfileButton from './ProfileButton';
 
 const OrderCard = ({ className = 'order-card-container', order }) => {
+  const navigate = useNavigate();
+
   let statusColor = "#000";
   switch(order.status){
     case "In progress":
@@ -21,7 +24,7 @@ const OrderCard = ({ className = 'order-card-container', order }) => {
   }
 
   const handleViewDetails = () => {
-
+    navigate(`/orders/${order._id}`);
   }
 
   return (
