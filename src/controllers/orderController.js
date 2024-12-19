@@ -7,6 +7,7 @@ exports.createOrder = async (req, res) => {
     const orderDetails = req.body.orderDetails; // []
     const delivery = req.body.delivery;
     const payment = req.body.payment;
+    const totalPrice = req.body.totalPrice;
     try {
         const db = await connectDB();
         const user = await db.collection('Users').findOne({ _id: new ObjectId(userId) });
@@ -21,13 +22,14 @@ exports.createOrder = async (req, res) => {
             orderDetails: orderDetails,
             delivery: delivery,
             payment: payment,
-            status: "Active",
+            status: "In progress",
+            totalPrice: parseFloat(totalPrice),
             createdAt: createdAt
         }
 
         const newOrder = await db.collection('Orders').insertOne(order);
 
-        res.status(200).json({ insertedId: newOrder.insertedId, createdAt: createdAt });
+        res.status(200).json({ insertedId: newOrder.insertedId, createdAt: createdAt, order: {...order, _id: newOrder.insertedId} });
     } catch (error) {
         console.error('Error creating order:', error);
         res.status(500).json({ message: 'Failed to create order', error });
