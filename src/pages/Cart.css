@@ -59,6 +59,8 @@
 .cart-summary {
     grid-area: s;
     justify-self: center;
+    position: sticky;
+    top: 10px;
     border: 2px solid #D1D1D8;
     margin: 20px 5px 0 0;
     width: 90%;
@@ -92,7 +94,7 @@
     padding: 10px 25px;
     border: none;
     border-radius: 5px;
-    cursor: "pointer";
+    cursor: pointer;
     transition: background-color 0.2s ease;
     width: 90%;
     margin: 10px;
@@ -104,5 +106,10 @@
             "s"
             "l";
             grid-template-columns: 1fr;
+    }
+    
+    .cart-summary { 
+        position: relative;
+        
     }
 }

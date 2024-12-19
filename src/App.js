@@ -19,6 +19,9 @@ import useAxiosPrivate from './hooks/useAxiosPrivate';
 import Catalog from './pages/Catalog';
 import SellerAddAndEditPage from './pages/SellerAddAndEditPage';
 import UnAuthorized from './pages/UnAuthorized';
+import Checkout from './pages/Checkout';
+import Orders from './pages/Orders';
+import Order from './pages/Order';
 
 const debounce = (func, delay) => {
   let timeout;
@@ -75,8 +78,10 @@ function App() {
 
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [buyerOrders, setBuyerOrders] = useState([]);
 
   const [catalog, setCatalog] = useState([]);
+  const [sellerOrders, setSellerOrders] = useState([]);
 
   // Loading
   const [products, setProducts] = useState([]);
@@ -103,18 +108,44 @@ function App() {
         if (isMounted) setProducts(productsResponse.data);
   
         if (authResponse.data.authenticated) {
-          const cartResponse = await axiosPrivate.get(`/api/cart/${authResponse.data.userId}`, {
+          const userId = authResponse.data.userId;
+
+          const profileResponse = await axiosPrivate.get(`/api/profile/${userId}`, { 
+            signal: controller.signal, 
+          });
+          if (isMounted) setProfile(profileResponse.data || {
+            bio: "",
+            location: "",
+            phone: "",
+            email: "",
+            currency: "",
+            language: "",
+            cardNumber: "",
+            cardDate: "",
+            cardCVV: "",
+            cardName: "",
+            profileImage: "", 
+            isSet: false
+          });
+
+          const buyerOrdersResponse = await axiosPrivate.get(`/api/orders/buyer/${userId}`, {
+            signal: controller.signal,
+          });
+          if (isMounted) setBuyerOrders(buyerOrdersResponse.data.orders || []);
+
+
+          const cartResponse = await axiosPrivate.get(`/api/cart/${userId}`, {
             signal: controller.signal,
           });
           if (isMounted) setCart(cartResponse.data.cart || []);
   
-          const wishlistResponse = await axiosPrivate.get(`/api/wishlist/${authResponse.data.userId}`, {
+          const wishlistResponse = await axiosPrivate.get(`/api/wishlist/${userId}`, {
             signal: controller.signal,
           });
           if (isMounted) setWishlist(wishlistResponse.data.wishlist || []);
           
           if(authResponse.data.role == "seller"){
-            const catalogResponse = await axiosPrivate.get(`/api/products/user/${authResponse.data.userId}`, {
+            const catalogResponse = await axiosPrivate.get(`/api/products/user/${userId}`, {
               signal: controller.signal,
             });
            
@@ -136,7 +167,7 @@ function App() {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [auth?.userId]);
   
   useEffect(() => {
     const catal = products.filter((prod) => prod?.userId === auth?.userId);
@@ -199,6 +230,9 @@ function App() {
                   setProfile={setProfile}
                   currencies={currencyDir}
                   languages={languageDir}
+                  setCart={setCart}
+                  setWishlist={setWishlist}
+                  setCatalog={setCatalog}
                 />
               </ProtectedRoute>
             }
@@ -216,6 +250,33 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['buyer', 'seller']}>
                 <Wishlist wishlist={wishlist} setWishlist={setWishlist} sortOptions={sortOptions} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
+                <Orders sortOptions={sortOptions} sort={sort} setSort={setSort} orders={buyerOrders} setorders={setBuyerOrders} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/order/:id"
+            element={
+              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
+                <Order orders={buyerOrders} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
+                <Checkout profile={profile} cart={cart} setCart={setCart} setBuyerOrders={setBuyerOrders} />
               </ProtectedRoute>
             }
           />

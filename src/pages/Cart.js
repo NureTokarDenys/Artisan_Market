@@ -1,12 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CartProduct from '../components/CartProduct';
 import './Cart.css';
 import ProfileButton from '../components/ProfileButton';
 
 const Cart = ({ cart, setCart }) => {
+  const navigate = useNavigate();
 
   const handleCheckout = () => {
-
+    navigate("/checkout");
   }
 
   const isEmpty = (cart?.length || 0) === 0;

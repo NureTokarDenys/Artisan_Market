@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { FaRegCircleUser, FaCartShopping, FaRegHeart, FaSuitcase, FaPlus } from "react-icons/fa6";
-import SearchBar from './SearchBar';
+import { FaRegCircleUser, FaCartShopping, FaRegHeart, FaSuitcase, FaPlus, FaClipboardList } from "react-icons/fa6";
 import MobileHeaderBars from './MobileHeaderBars';
 import './Header.css';
 import useAuth from '../hooks/useAuth';
@@ -25,7 +24,7 @@ const Header = () => {
         </ul>
         <MobileHeaderBars className="mobile-header-bars" />
         <div className="search_profile">
-            <Link to="/" title="Search"> <SearchBar /> </Link> {/* TODO*/}
+            <Link to="/orders" title="Orders"> <FaClipboardList /> </Link> 
 
             {auth?.role === 'seller' && (
                <Link to="/catalog" title="Go to My Catalog"> <FaSuitcase /> </Link>

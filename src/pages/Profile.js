@@ -11,7 +11,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { Loader } from '../components/Loader';
 import axios from '../api/axios';
 
-const Profile = ({ profile, setProfile, currencies, languages }) => {
+const Profile = ({ profile, setProfile, currencies, languages, setCart, setWishlist, setCatalog }) => {
   const { auth, logout } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 

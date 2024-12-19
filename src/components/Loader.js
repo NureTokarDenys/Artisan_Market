@@ -1,6 +1,6 @@
 import './Loader.css';
 
-const Loader = ({ size = 'md', color = 'green', text = '' }) => {
+const Loader = ({ size = 'md', color = 'green', text = '', className='loader-container' }) => {
   const sizeClasses = {
     sm: 'loader-sm',
     md: 'loader-md',
@@ -15,7 +15,7 @@ const Loader = ({ size = 'md', color = 'green', text = '' }) => {
   };
 
   return (
-    <div className="loader-container">
+    <div className={className}>
       <div className={`
         loader 
         ${sizeClasses[size]} 

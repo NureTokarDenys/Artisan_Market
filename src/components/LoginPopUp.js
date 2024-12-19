@@ -51,7 +51,7 @@ const LoginPopUp = () => {
       });
 
       const { userId, accessToken, role } = response.data;
-      console.log(role)
+
       login(userId, accessToken, role);
       
       handleLoginSuccess();
