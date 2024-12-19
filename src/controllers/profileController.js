@@ -7,7 +7,7 @@ exports.getProfile = async (req, res) => {
         const db = await connectDB();
         const profilesCollection = db.collection('Profiles');
 
-        const user = db.collection('Users').findOne({ _id: new ObjectId(id) });
+        const user = await db.collection('Users').findOne({ _id: new ObjectId(id) });
         let userProfile = await profilesCollection.findOne({ userId: id });
         if ((!userProfile) && (user)){
             const newProfile = {

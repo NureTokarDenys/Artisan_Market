@@ -7,7 +7,7 @@ exports.getCart = async (req, res) => {
         const db = await connectDB();
         const cartsCollection = db.collection('Carts');
 
-        const user = db.collection('Users').findOne({ _id: new ObjectId(id) });
+        const user = await db.collection('Users').findOne({ _id: new ObjectId(id) });
         let userCart = await cartsCollection.findOne({ userId: id });
         if ((!userCart) && (user)){
             const newCart = {
@@ -35,7 +35,7 @@ exports.getWishlist = async (req, res) => {
         const db = await connectDB();
         const wishlistsCollection = db.collection('Wishlists');
 
-        const user = db.collection('Users').findOne({ _id: new ObjectId(id) });
+        const user = await db.collection('Users').findOne({ _id: new ObjectId(id) });
         let userWishlist = await wishlistsCollection.findOne({ userId: id });
         if ((!userWishlist) && (user)){
             const newWishlist = {
@@ -118,3 +118,24 @@ exports.setWishlist = async (req, res) => {
         res.status(500).json({ message: 'Failed to update wishlist', error });
     }
 };
+
+exports.getUserInfo = async (req, res) => {
+    const id = req.params.id;
+
+    if(!id) return res.status(400).json({ message: "No user id is provided" });
+
+    try {
+        const db = await connectDB();
+        const user = await db.collection('Users').findOne({ _id: new ObjectId(id) });
+
+        if(!user) return res.status(404).json({ message: "User not found" });
+
+        const FullName = user.name + " " + user.surname;
+        const email = user.email;
+
+        res.status(200).json({ username: FullName, email: email });
+    } catch (error) {
+        console.error('Error getting username:', error);
+        res.status(500).json({ message: 'Failed to get username', error });
+    }
+}

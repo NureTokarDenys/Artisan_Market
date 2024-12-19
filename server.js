@@ -38,3 +38,6 @@ app.use('/api/s3', s3Routes);
 
 const cartWishlistRoutes = require('./src/routes/cartWishlistRoutes');
 app.use('/api', cartWishlistRoutes);
+
+const orderRoutes = require('./src/routes/orderRoutes');
+app.use('/api/orders', orderRoutes);
