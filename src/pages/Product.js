@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { Image } from 'semantic-ui-react';
 import { FaRegHeart, FaHeart, FaChevronLeft, FaChevronRight  } from "react-icons/fa6";
+import Breadcrumbs from '../components/Breadcrumbs';
 import './Product.css';
 
 const Product = ({ products, cart, setCart, wishlist, setWishlist }) => {
@@ -67,11 +68,10 @@ const Product = ({ products, cart, setCart, wishlist, setWishlist }) => {
 
   return (
     <div className="product-container">
-      <div className="product-navigation">
-        <Link to="/products">Shop</Link>
-        <span>/</span>
-        <span>{product.name}</span>
-      </div>
+      <Breadcrumbs links={[ 
+        { name: "Shop", link: "/products" },
+        { name: product.name }]} 
+      />
 
       <div className="product-grid">
         <div className="product-info">
