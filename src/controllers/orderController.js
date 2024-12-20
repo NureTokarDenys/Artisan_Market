@@ -60,48 +60,65 @@ exports.getBuyerOrders = async (req, res) => {
 
 // Get all orders for a seller
 exports.getSellerOrders = async (req, res) => {
-    const id = req.params.id; 
-    try {
+  const id = req.params.id; 
+  try {
       const db = await connectDB();
       const ordersCollection = db.collection('Orders');
-  
+
       if (!ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid userId format' });
+          return res.status(400).json({ message: 'Invalid userId format' });
       }
-  
+
       const user = await db.collection('Users').findOne({ _id: new ObjectId(id) });
       if (!user) {
-        return res.status(404).json({ message: 'User does not exist' });
+          return res.status(404).json({ message: 'User does not exist' });
       }
-  
+
       // Aggregation pipeline
       const pipeline = [
-        {
-          $unwind: "$orderDetails" // Break down 'orderDetails' array into individual product documents
-        },
-        {
-          $match: { "orderDetails.userId": id } // Match products where userId matches seller ID
-        },
-        {
-          $project: {
-            _id: 0,
-            product: "$orderDetails", // Include the product
-            buyerId: "$userId",        // Include the userId of the order
-            delivery: "$delivery",    // Include delivery information
-            payment: "$payment",      // Include payment information
-            createdAt: "$createdAt"   // Include createdAt timestamp
+          {
+              $unwind: "$orderDetails" // Break down 'orderDetails' array into individual product documents
+          },
+          {
+              $match: { "orderDetails.userId": id } // Filter products by seller ID
+          },
+          {
+              $group: {
+                  _id: {
+                      orderId: "$_id", // Group by orderId (unique per order)
+                      buyerId: "$userId" // Include buyer's userId
+                  },
+                  products: { $push: "$orderDetails" }, // Collect all products for this order
+                  delivery: { $first: "$delivery" }, // Take delivery info from the order
+                  payment: { $first: "$payment" }, // Take payment info from the order
+                  createdAt: { $first: "$createdAt" }, // Take the order creation timestamp
+                  status: { $first: "$status" }
+              }
+          },
+          {
+              $project: {
+                  _id: 0,
+                  orderId: "$_id.orderId", // Include orderId
+                  buyerId: "$_id.buyerId", // Include buyerId
+                  products: 1, 
+                  delivery: 1,
+                  payment: 1,
+                  status: 1,
+                  createdAt: 1
+              }
           }
-        }
       ];
-  
+
       const sellerOrders = await ordersCollection.aggregate(pipeline).toArray();
-  
+
       res.status(200).json(sellerOrders);
-    } catch (error) {
+  } catch (error) {
       console.error('Error getting orders of a seller:', error);
       res.status(500).json({ message: 'Failed to get orders of a seller', error: error.message });
-    }
-  };
+  }
+};
+
+
 
   // Order cancellation
     exports.changeOrderStatus = async (req, res) => {
