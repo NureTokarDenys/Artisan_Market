@@ -4,8 +4,8 @@ const authMiddleware = require('../middleware/authMiddleware');
 const { createOrder, getBuyerOrders, getSellerOrders, changeOrderStatus } = require('../controllers/orderController'); 
 
 router.post("/create", authMiddleware, createOrder);
-router.get("/buyer/:id", getBuyerOrders);
-router.get("/seller/:id", getSellerOrders);
-router.post("/status/:id", changeOrderStatus);
+router.get("/buyer/:id", authMiddleware, getBuyerOrders);
+router.get("/seller/:id", authMiddleware, getSellerOrders);
+router.post("/status/:id", authMiddleware, changeOrderStatus);
 
 module.exports = router;

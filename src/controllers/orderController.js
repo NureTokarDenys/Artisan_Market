@@ -126,7 +126,7 @@ exports.getSellerOrders = async (req, res) => {
         const userId = req.user.id; 
     
         try {
-            const status = req.body.status;
+            const status = req.body.status; 
         
             const db = await connectDB();
         
