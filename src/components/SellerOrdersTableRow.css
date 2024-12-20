@@ -1,0 +1,45 @@
+.order-row {
+    border-bottom: 20px solid #efefef;
+    background-color: #dbd9d9;
+    cursor: pointer;
+}
+
+.order-row td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+}
+
+.order-row td:not(:last-child) {
+    border-right: 1px solid #000; 
+}
+  
+.order-row-status-pending {
+    color: #8E8E93;
+    font-weight: bold;
+}
+  
+.order-row-status-completed {
+    color: #4caf50;
+    font-weight: bold;
+}
+  
+.order-row-status-canceled {
+    color: #f44336;
+    font-weight: bold;
+}
+  
+.order-row:hover {
+    background-color: #f9f9f9;
+}
+  
+.buyer-loader {
+    height: auto;
+}
+
+.lc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,22 @@
+.empty-seller-orders {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.empty-seller-orders-header {
+    margin: 10px;
+}
+
+.seller-orders-container {
+    width: 75%;
+}
+
+.seller-order-stats {
+    margin: 10px 25px;
+}
+
+.seller-order-stats * {
+    margin: 4px 0;
+}

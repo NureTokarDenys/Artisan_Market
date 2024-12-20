@@ -398,6 +398,7 @@ const Profile = ({ profile, setProfile, currencies, languages, setCart, setWishl
           <div className='logout'>
             <ProfileButton
                 title={"Logout"}
+                textColor={"#ffffff"}
                 bgColor={"#d64545"}
                 hoverColor={"#f07a7a"}
                 action={handleLogout}

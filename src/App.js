@@ -22,6 +22,7 @@ import UnAuthorized from './pages/UnAuthorized';
 import Checkout from './pages/Checkout';
 import Orders from './pages/Orders';
 import Order from './pages/Order';
+import SellerOrders from './pages/SellerOrders';
 
 const debounce = (func, delay) => {
   let timeout;
@@ -150,6 +151,12 @@ function App() {
             });
            
             if (isMounted) setCatalog(catalogResponse.data || []);
+
+            const sellerOrdersResponse = await axiosPrivate.get(`/api/orders/seller/${userId}`, {
+              signal: controller.signal,
+            });
+           
+            if (isMounted) setSellerOrders(sellerOrdersResponse.data || []);
           }
         }
       } catch (error) {
@@ -240,7 +247,7 @@ function App() {
           <Route
             path="/cart"
             element={
-              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
+              <ProtectedRoute allowedRoles={['buyer']}>
                 <Cart cart={cart} setCart={setCart} />
               </ProtectedRoute>
             }
@@ -248,7 +255,7 @@ function App() {
           <Route
             path="/wishlist"
             element={
-              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
+              <ProtectedRoute allowedRoles={['buyer']}>
                 <Wishlist wishlist={wishlist} setWishlist={setWishlist} sortOptions={sortOptions} />
               </ProtectedRoute>
             }
@@ -257,7 +264,7 @@ function App() {
           <Route
             path="/orders"
             element={
-              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
+              <ProtectedRoute allowedRoles={['buyer']}>
                 <Orders sortOptions={sortOptions} sort={sort} setSort={setSort} orders={buyerOrders} setorders={setBuyerOrders} />
               </ProtectedRoute>
             }
@@ -266,8 +273,8 @@ function App() {
           <Route
             path="/orders/:id"
             element={
-              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
-                <Order orders={buyerOrders} />
+              <ProtectedRoute allowedRoles={['buyer']}>
+                <Order orders={buyerOrders} user={"buyer"} />
               </ProtectedRoute>
             }
           />
@@ -275,12 +282,30 @@ function App() {
           <Route
             path="/checkout"
             element={
-              <ProtectedRoute allowedRoles={['buyer', 'seller']}>
+              <ProtectedRoute allowedRoles={['buyer']}>
                 <Checkout profile={profile} cart={cart} setCart={setCart} setBuyerOrders={setBuyerOrders} />
               </ProtectedRoute>
             }
           />
 
+
+          <Route
+            path="/myorders"
+            element={
+              <ProtectedRoute allowedRoles={['seller']}>
+                <SellerOrders orders={sellerOrders} sort={sort} setSort={setSort} sortOptions={sortOptions} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/myorders/:id"
+            element={
+              <ProtectedRoute allowedRoles={['seller']}>
+                <Order orders={sellerOrders} user={"seller"} />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/catalog"

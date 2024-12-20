@@ -11,6 +11,12 @@ const OrderCard = ({ className = 'order-card-container', order }) => {
     case "In progress":
       statusColor = "#8E8E93";
     break;
+    case "Cancelled":
+      statusColor = "#f44336";
+    break;
+    case "Completed":
+      statusColor = "#4caf50";
+    break;
   }
 
   const formattedDate = new Intl.DateTimeFormat('en-GB', {
@@ -19,9 +25,6 @@ const OrderCard = ({ className = 'order-card-container', order }) => {
     year: 'numeric',
   }).format(new Date(order.createdAt));
 
-  const handleRepeatOrder = () => {
-
-  }
 
   const handleViewDetails = () => {
     navigate(`/orders/${order._id}`);
@@ -38,7 +41,6 @@ const OrderCard = ({ className = 'order-card-container', order }) => {
         <h3 className='order-info-status-container'>Status: <p style={{color: statusColor}}>{order.status}</p></h3>
       </div>
       <div className='order-actions'>
-        <ProfileButton title='Repeat Order' className='order-action-button' bgColor='#84A98C' hoverColor='#3acf46' textColor='#ffffff' action={handleRepeatOrder}/>
         <ProfileButton title='View Details' className='order-action-button' hoverColor='#d3d3d3' textColor='#4B72C2' action={handleViewDetails}/>
       </div>
     </div>

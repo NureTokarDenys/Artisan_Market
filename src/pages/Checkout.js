@@ -26,6 +26,7 @@ const Checkout = ({ profile, cart, setCart, setBuyerOrders }) => {
         getUsername();
 
     }, []);
+
     const handleOrder = async () => {
         const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
         try{
@@ -39,7 +40,7 @@ const Checkout = ({ profile, cart, setCart, setBuyerOrders }) => {
             setBuyerOrders((prev) => ([...prev, response.data.order]));
             alert("Order created successfully.");
             setCart([]);
-            navigate("/products"); // temp
+            navigate("/orders"); 
         } catch (error) {
 
         }
@@ -58,7 +59,8 @@ const Checkout = ({ profile, cart, setCart, setBuyerOrders }) => {
                         </> : <>
                             <div className="checkout-user-info"><FaRegUser /><p>{userEmail}</p></div>
                             <h3>{username}</h3>
-                        </>}
+                        </>
+                    }
 
                 </div>
             </div>
@@ -66,7 +68,7 @@ const Checkout = ({ profile, cart, setCart, setBuyerOrders }) => {
                 <div class="section-title">Order details</div>
                 <div class="section-content">
                     {cart.map((product) => (
-                        <CartProduct key={product._id} product={product} cart={cart} setCart={setCart} />
+                        <CartProduct key={product._id} product={product} cart={cart} setCart={setCart} isOrderUsed={true} />
                     ))}
                 </div>
             </div>

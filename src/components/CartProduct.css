@@ -75,7 +75,10 @@
     grid-area: p;
     font-size: 16px;
     font-weight: bold;
-    margin-right: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
   }
   
   .cart-product-remove {
@@ -86,5 +89,21 @@
     cursor: pointer;
     font-size: 14px;
     margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  
+
+  .cart-quantity {
+    grid-area: q;
+  }
+
+  .cart-totalP {
+    grid-area: r;
+  }
+
+  .cart-totalP, .cart-quantity {
+    margin: 5px;
+    display: flex;
+    align-items: center;
+  }
